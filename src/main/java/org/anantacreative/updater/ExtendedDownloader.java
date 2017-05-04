@@ -134,7 +134,8 @@ private void breakinglink() {
       // Open connection to URL.
       HttpURLConnection connection =
         (HttpURLConnection) url.openConnection();
-
+        connection.setConnectTimeout(15000);
+        connection.setReadTimeout(30000);
       if(size==-1)
       {
       //заново создаем объект закачки
