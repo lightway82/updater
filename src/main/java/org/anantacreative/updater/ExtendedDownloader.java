@@ -56,8 +56,7 @@ public class ExtendedDownloader  extends Observable implements Runnable
     this.pathToFile=pathToFile;
     this.newDownload=newDownload;
     this.param=param;
-    
-    
+
   }
   public File getFile(){return pathToFile;}
   public void startDownload(){
@@ -120,7 +119,8 @@ private void breakinglink() {
   private void download() {
      thread = new Thread(this);
      thread.setName("Downloader="+this.pathToFile.getName());
-    thread.start();
+     if(!createDirIfNotExists(pathToFile)) {error();return;}
+     thread.start();
   }
 
  
@@ -140,12 +140,12 @@ private void breakinglink() {
       {
       //заново создаем объект закачки
             if(status == DOWNLOADING && newDownload)downloaded=0;
-            if(status == DOWNLOADING && newDownload==false)
+            if(status == DOWNLOADING)
             {
               //определим размер скаченного уже. Работает в случае если прерывали закачку не по паузе.
                
               downloadedPrev  = (int)pathToFile.length();
-
+              downloaded =downloadedPrev;
             }
       }
       
@@ -155,7 +155,13 @@ private void breakinglink() {
       // Connect to server.
       connection.connect();
 
-      // Make sure response code is in the 200 range.
+        //файл уже скачан, проверка только в режиме докачки
+        if (connection.getResponseCode() == 416  && newDownload==false){
+            status = COMPLETE;
+            stateChanged();
+            return;
+        }
+        // Make sure response code is in the 200 range.
       if (connection.getResponseCode() / 100 != 2)
       {
        this.breakinglink();
@@ -251,7 +257,13 @@ private void breakinglink() {
     setChanged();
     notifyObservers();
   }
-  
-    
-    
+
+
+
+  private boolean createDirIfNotExists(File filePath){
+    File parentDir = filePath.getParentFile();
+    if(!parentDir.exists()) return parentDir.mkdirs();
+    else return true;
+  }
+
 }

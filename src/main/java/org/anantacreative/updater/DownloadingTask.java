@@ -49,11 +49,7 @@ public class DownloadingTask implements Observer
         this.reloadAll = reloadAll;
         stop();
         iterator = downloadItems.iterator();
-        try {
-            if(!next()) completer.complete();
-        } catch (Exception e) {
-            completer.error(e.getMessage());
-        }
+        update(null,null);
     }
 
     private void stop(){
@@ -77,25 +73,32 @@ public class DownloadingTask implements Observer
         return true;
     }
 
-
     @Override
     public void update(Observable o, Object arg) {
+        if(o==null){
+            try {
+                if(!next()) completer.complete();
+                else completer.nextFileStartDownloading(currentDownloader.getUrl(),currentDownloader.getFile());
+            } catch (Exception e) {
+                completer.error(e.getMessage());
+            }
+            return;
+        }
 
         int status = currentDownloader.getStatus();
         switch (status) {
             case ExtendedDownloader.COMPLETE:
 
                 try {
+                    completer.completeFile(currentDownloader.getUrl(),currentDownloader.getFile());
                     if(!next()) completer.complete();
+                    else completer.nextFileStartDownloading(currentDownloader.getUrl(),currentDownloader.getFile());
                 } catch (Exception e) {
                     completer.error(e.getMessage());
                 }
                 break;
             case ExtendedDownloader.BREAKINGLINK:
             case ExtendedDownloader.ERROR:
-
-
-
                 //битая ссылка  или проблемы с доступом
                 if (status == ExtendedDownloader.BREAKINGLINK) {
                     completer.error("BREAKINGLINK");
@@ -103,8 +106,12 @@ public class DownloadingTask implements Observer
                 }else   completer.error("");
                 stop();
                 break;
-
-
+            case ExtendedDownloader.DOWNLOADING:
+                completer.currentFileProgress(currentDownloader.getProgress());
+                break;
+            case ExtendedDownloader.CANCELLED:
+                completer.canceled();
+                break;
         }
     }
 
@@ -124,7 +131,10 @@ public class DownloadingTask implements Observer
     {
         void complete();
         void error(String msg);
-
+        void completeFile(String url, File path);
+        void currentFileProgress(float progress);
+        void canceled();
+        void nextFileStartDownloading(String url, File path);
     }
 
     public static boolean  checkInternet(URL url) {
