@@ -16,7 +16,7 @@ import java.util.Observable;
 
 /**
  *
- * @author Anama
+ * Загрузчик файлов с докачкой и прогрессом.
  */
 public class ExtendedDownloader  extends Observable implements Runnable 
 {
@@ -156,7 +156,7 @@ private void breakinglink() {
       connection.connect();
 
         //файл уже скачан, проверка только в режиме докачки
-        if (connection.getResponseCode() == 416  && newDownload==false){
+        if (connection.getResponseCode() == 416  && !newDownload){
             status = COMPLETE;
             stateChanged();
             return;

@@ -5,7 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by Ananta on 04.05.2017.
+ *
  */
 public class Example {
 

@@ -10,10 +10,9 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * Created by Ananta on 05.05.2017.
+ * Задание на загрузку файлов
  */
-public class DownloadingTask implements Observer
-{
+public class DownloadingTask implements Observer {
     private List<DownloadingItem> downloadItems = new ArrayList<>();
 
     private TaskCompleteListener completer;
@@ -33,52 +32,50 @@ public class DownloadingTask implements Observer
     private DownloadingTask() {
     }
 
-    public void addItem(DownloadingItem item)
-    {
+    public void addItem(DownloadingItem item) {
         downloadItems.add(item);
 
     }
-    public void addItem(URL url,File path)
-    {
-        downloadItems.add(new DownloadingItem(url,path));
+
+    public void addItem(URL url, File path) {
+        downloadItems.add(new DownloadingItem(url, path));
 
     }
 
 
-    public void download(boolean reloadAll){
+    public void download(boolean reloadAll) {
         this.reloadAll = reloadAll;
         stop();
         iterator = downloadItems.iterator();
-        update(null,null);
+        update(null, null);
     }
 
-    private void stop(){
-        if(currentDownloader!=null){
+    private void stop() {
+        if (currentDownloader != null) {
             currentDownloader.deleteObserver(this);
             currentDownloader.cancel();
-            currentDownloader=null;
+            currentDownloader = null;
         }
     }
 
     private boolean next() throws Exception {
-        if(currentDownloader!=null)currentDownloader.deleteObserver(this);
-        if(!iterator.hasNext()) return false;
+        if (currentDownloader != null) currentDownloader.deleteObserver(this);
+        if (!iterator.hasNext()) return false;
         DownloadingItem item = iterator.next();
-        currentDownloader = new ExtendedDownloader(item.getUrl(),item.getDstPath(),reloadAll,0);
-        if(currentDownloader!=null){
-            currentDownloader.addObserver(this);
-            currentDownloader.startDownload();
-        }else throw new  Exception("Не удалось создать задачу загрузки файлов");
+        currentDownloader = new ExtendedDownloader(item.getUrl(), item.getDstPath(), reloadAll, 0);
+
+        currentDownloader.addObserver(this);
+        currentDownloader.startDownload();
 
         return true;
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        if(o==null){
+        if (o == null) {
             try {
-                if(!next()) completer.complete();
-                else completer.nextFileStartDownloading(currentDownloader.getUrl(),currentDownloader.getFile());
+                if (!next()) completer.complete();
+                else completer.nextFileStartDownloading(currentDownloader.getUrl(), currentDownloader.getFile());
             } catch (Exception e) {
                 completer.error(e.getMessage());
             }
@@ -90,9 +87,9 @@ public class DownloadingTask implements Observer
             case ExtendedDownloader.COMPLETE:
 
                 try {
-                    completer.completeFile(currentDownloader.getUrl(),currentDownloader.getFile());
-                    if(!next()) completer.complete();
-                    else completer.nextFileStartDownloading(currentDownloader.getUrl(),currentDownloader.getFile());
+                    completer.completeFile(currentDownloader.getUrl(), currentDownloader.getFile());
+                    if (!next()) completer.complete();
+                    else completer.nextFileStartDownloading(currentDownloader.getUrl(), currentDownloader.getFile());
                 } catch (Exception e) {
                     completer.error(e.getMessage());
                 }
@@ -101,9 +98,9 @@ public class DownloadingTask implements Observer
             case ExtendedDownloader.ERROR:
                 //битая ссылка  или проблемы с доступом
                 if (status == ExtendedDownloader.BREAKINGLINK) {
-                    completer.error("BREAKINGLINK");
+                    completer.error("BREAKING LINK");
 
-                }else   completer.error("");
+                } else completer.error("");
                 stop();
                 break;
             case ExtendedDownloader.DOWNLOADING:
@@ -116,43 +113,42 @@ public class DownloadingTask implements Observer
     }
 
 
-
-
     @Data
     @AllArgsConstructor
-    public static class DownloadingItem
-    {
+    public static class DownloadingItem {
         private URL url;
         private File dstPath;
 
     }
 
-    public interface TaskCompleteListener
-    {
+    public interface TaskCompleteListener {
         void complete();
+
         void error(String msg);
+
         void completeFile(String url, File path);
+
         void currentFileProgress(float progress);
+
         void canceled();
+
         void nextFileStartDownloading(String url, File path);
     }
 
-    public static boolean  checkInternet(URL url) {
-        boolean flag = false;
+    public static boolean checkInternet(URL url) {
+
         HttpURLConnection connection = null;
         try {
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
-            flag = true;
+           return true;
 
         } catch (IOException ex) {
-            flag = false;
+           return false;
 
         } finally {
 
             if (connection != null) connection.disconnect();
-
-            return flag;
         }
 
     }
