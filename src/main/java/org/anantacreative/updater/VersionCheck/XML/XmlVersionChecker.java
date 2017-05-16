@@ -1,5 +1,8 @@
-package org.anantacreative.updater;
+package org.anantacreative.updater.VersionCheck.XML;
 
+import org.anantacreative.updater.Version;
+import org.anantacreative.updater.VersionCheck.AbstractVersionChecker;
+import org.anantacreative.updater.VersionCheck.DefineActualVersionError;
 import org.xml.sax.SAXException;
 
 import java.net.URL;
@@ -16,7 +19,7 @@ public class XmlVersionChecker extends AbstractVersionChecker {
     }
 
     @Override
-    Version getVersionForUpdate() throws DefineActualVersionError {
+    public Version getVersionForUpdate() throws DefineActualVersionError {
 
         try {
             XmlVersionParser versionParser = new XmlVersionParser(versionFile);
@@ -27,4 +30,6 @@ public class XmlVersionChecker extends AbstractVersionChecker {
         }
 
     }
+
+
 }

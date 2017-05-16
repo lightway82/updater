@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.anantacreative.updater;
+package org.anantacreative.updater.Downloader;
 
 import java.io.File;
 import java.io.FileNotFoundException;

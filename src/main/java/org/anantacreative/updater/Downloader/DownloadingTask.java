@@ -1,4 +1,4 @@
-package org.anantacreative.updater;
+package org.anantacreative.updater.Downloader;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

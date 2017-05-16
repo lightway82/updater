@@ -1,4 +1,6 @@
-package org.anantacreative.updater;
+package org.anantacreative.updater.VersionCheck;
+
+import org.anantacreative.updater.Version;
 
 /**
  * Абстрактный класс проверки соответствия версии программы и версии для обновления
@@ -18,22 +20,18 @@ public abstract class AbstractVersionChecker {
         return actualVersion;
     }
 
+    public Version getCurrentVersion() {
+        return currentVersion;
+    }
+
     public boolean checkNeedUpdate() throws DefineActualVersionError {
         actualVersion = getVersionForUpdate();
         if (actualVersion == null) throw new DefineActualVersionError("");
         return currentVersion.lessThen(actualVersion);
     }
 
-    abstract Version getVersionForUpdate() throws DefineActualVersionError;
+   public abstract Version getVersionForUpdate() throws DefineActualVersionError;
 
 
-    public static class DefineActualVersionError extends Exception {
-        public DefineActualVersionError(String message) {
-            super(message);
-        }
 
-        public DefineActualVersionError(String message, Throwable cause) {
-            super(message, cause);
-        }
-    }
 }

@@ -1,0 +1,40 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<Update date="">
+    <Action type="Move">
+        <File url="http://www.biomedis.ru/doc/bazovie_kompleksi/bazoviy_kompleks_utro.zip"  dst="tmp"/>
+        <File url="http://www.biomedis.ru/doc/bazovie_kompleksi/bazoviy_kompleks_gerpes.zip"  dst="tmp/tmp2"/>
+    </Action>
+    <Action type="Rename">
+        <File  src="tmp/tmp2/bazoviy_kompleks_gerpes.zip" dst="111.zip"/>
+    </Action>
+    <Action type="MoveIn">
+        <File  src="" dst=""/>
+    </Action>
+    <Action type="DeleteDir">
+        <File  src="" />
+    </Action>
+    <Action type="DeleteFiles">
+        <File src=""/>
+    </Action>
+    <Action type="Unpack">
+        <File url=""  dst=""/>
+    </Action>
+    <Action type="PackDir">
+        <File  src="" dst=""/>
+    </Action>
+    <Action type="PackFiles">
+        <File  src="" dst=""/>
+    </Action>
+    <Action type="Run">
+        <File url="" />
+    </Action>
+    <Action type="RunIn">
+        <File  src="" />
+    </Action>
+    <Action type="CopyFiles">
+        <File  src="" dst=""/>
+    </Action>
+    <Action type="CopyDir">
+        <File src="" dst=""/>
+    </Action>
+</Update>

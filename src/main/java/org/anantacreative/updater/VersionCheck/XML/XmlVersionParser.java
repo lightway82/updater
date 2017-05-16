@@ -1,5 +1,7 @@
-package org.anantacreative.updater;
+package org.anantacreative.updater.VersionCheck.XML;
 
+import org.anantacreative.updater.FileTypeMissMatch;
+import org.anantacreative.updater.Version;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -23,6 +25,10 @@ public class XmlVersionParser {
     public XmlVersionParser(URL xmlURL) throws SAXException {
         super();
         this.xmlURL = xmlURL;
+        initParser();
+    }
+
+    private void initParser() throws SAXException {
         reader = XMLReaderFactory.createXMLReader();
         handler = new XmlVersionParserHandler();
         reader.setContentHandler(handler);
@@ -33,10 +39,7 @@ public class XmlVersionParser {
     public XmlVersionParser(File xmlFile) throws SAXException {
         super();
         this.xmlFile = xmlFile;
-        reader = XMLReaderFactory.createXMLReader();
-        handler = new XmlVersionParserHandler();
-        reader.setContentHandler(handler);
-        reader.setErrorHandler(handler);
+        initParser();
     }
 
     public Version parse() throws FileTypeMissMatch {
@@ -64,23 +67,4 @@ public class XmlVersionParser {
     }
 
 
-    /**
-     * Тип XML не соответствует парсеру
-     */
-    public static class FileTypeMissMatch extends SAXException {
-        public FileTypeMissMatch() {
-        }
-
-        public FileTypeMissMatch(String message) {
-            super(message);
-        }
-
-        public FileTypeMissMatch(Exception e) {
-            super(e);
-        }
-
-        public FileTypeMissMatch(String message, Exception e) {
-            super(message, e);
-        }
-    }
 }
