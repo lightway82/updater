@@ -109,6 +109,7 @@ public abstract class AbstractUpdateTaskCreator {
                 }
             });
             dt.download(reload);
+            listener.totalProgress(0);
         } catch (GetUpdateFilesError e) {
             throw new CreateUpdateTaskError(e);
         } catch (Exception e) {

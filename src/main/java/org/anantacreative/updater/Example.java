@@ -109,7 +109,7 @@ public class Example {
                         },
                         new URL("http://www.biomedis.ru/doc/b_mair/updater/update.xml"));
 
-                taskCreator.createTask(true);
+                taskCreator.createTask(false);
             }
             else   System.out.println("Обновление не требуется");
 
