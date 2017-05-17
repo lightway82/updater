@@ -63,7 +63,7 @@ public class Example {
 */
 
         Version curVersion=new Version(1,0,0);
-
+        XmlUpdateTaskCreator taskCreator;
         try {
             XmlVersionChecker versionChecker=new XmlVersionChecker(curVersion,new URL("http://www.biomedis.ru/doc/b_mair/updater/version.xml"));
             if(versionChecker.checkNeedUpdate())   {
@@ -71,7 +71,7 @@ public class Example {
                 System.out.println("Актуальная версия = "+ versionChecker.getActualVersion());
                 System.out.println("Текцщая версия = "+ versionChecker.getCurrentVersion());
 
-                XmlUpdateTaskCreator taskCreator=new XmlUpdateTaskCreator(
+                 taskCreator=new XmlUpdateTaskCreator(
                         new File("./downloads/"),
                         new File("./"),
                         new AbstractUpdateTaskCreator.Listener() {
@@ -85,6 +85,27 @@ public class Example {
                                 System.out.println("Ошибка создания Update  Task");
                                 e.printStackTrace();
                             }
+
+                            @Override
+                            public void completeFile(String url, File path) {
+                                System.out.println("\nФайл закачан!");
+                            }
+
+                            @Override
+                            public void currentFileProgress(float progress) {
+
+                                progressPercentage((int)progress,100);
+                            }
+
+                            @Override
+                            public void nextFileStartDownloading(String url, File path) {
+                                System.out.println("Скачивается файл: "+ url+" путь: "+path.getAbsolutePath());
+                            }
+
+                            @Override
+                            public void totalProgress(float progress) {
+                                progressPercentage((int)progress,100);
+                            }
                         },
                         new URL("http://www.biomedis.ru/doc/b_mair/updater/update.xml"));
 
@@ -97,9 +118,9 @@ public class Example {
             e.printStackTrace();
         } catch (DefineActualVersionError e) {
             e.printStackTrace();
-        } catch (AbstractUpdateTaskCreator.CreateUpdateTaskError createUpdateTaskError) {
-            createUpdateTaskError.printStackTrace();
-        }
+        } catch (AbstractUpdateTaskCreator.CreateUpdateTaskError e) {
+            e.printStackTrace();
+        }catch (Exception e){e.printStackTrace();}
     }
     public static void progressPercentage(int remain, int total) {
         if (remain > total) {

@@ -58,7 +58,7 @@ public class XmlUpdateFileHandler extends DefaultHandler {
             try {
                 currentUpdateTaskItem.setAction(ActionBuilder.build(type));
             } catch (ActionBuilder.UnknownActionError e) {
-                throw new SAXException(e);
+                throw new SAXException("Action type='"+type+"'",e);
             }
 
         } else if (qName.equals("File")) {
@@ -92,6 +92,7 @@ public class XmlUpdateFileHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
 
         if (qName.equals("Action")) {
+            task.addItem(currentUpdateTaskItem);
             currentUpdateTaskItem = null;
         }
 

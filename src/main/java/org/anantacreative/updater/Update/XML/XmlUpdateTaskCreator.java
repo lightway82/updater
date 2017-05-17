@@ -54,14 +54,13 @@ public class XmlUpdateTaskCreator extends AbstractUpdateTaskCreator {
             }
             task = up.parse();
             res.addAll(task.getDownloadingFiles().stream()
-                           .map(f -> new DownloadingTask.DownloadingItem(f.getUrl(), getDownloadsDir()))
+                           .map(f -> new DownloadingTask.DownloadingItem(f.getUrl(), new File(getDownloadsDir(),extractFileNameFromUrl(f.getUrl()))))
                            .collect(Collectors.toList()));
+            return res;
         } catch (SAXException e) {
             throw new GetUpdateFilesError(e);
         } catch (Exception e) {
             throw new GetUpdateFilesError(e);
-        } finally {
-            return res;
         }
     }
 

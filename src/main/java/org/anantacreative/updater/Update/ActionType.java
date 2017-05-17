@@ -25,13 +25,15 @@ public enum ActionType {
         this.typeName = typeName;
     }
 
+    public String getTypeName() {
+        return typeName;
+    }
 
     public static ActionType getType(String type) {
-        try {
-            return ActionType.valueOf(type);
-        } catch (Exception e) {
+
+            for(ActionType at : ActionType.values()) if(at.getTypeName().equals(type)) return at;
             return UNKNOWN;
-        }
+
 
     }
 }

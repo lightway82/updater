@@ -50,7 +50,7 @@ public class UpdateActionFileItem {
         }
 
         public Builder setURL(URL url) {
-            url = url;
+            this.url = url;
             return this;
         }
 

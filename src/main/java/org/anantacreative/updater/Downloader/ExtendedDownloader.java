@@ -47,7 +47,13 @@ public class ExtendedDownloader  extends Observable implements Runnable
   
  public Thread thread;
 
-  // Constructor for Download.
+    /**
+     *
+     * @param url url закачки
+     * @param pathToFile файл в который закачивается, не папка, а именно файл.
+     * @param newDownload
+     * @param param
+     */
   public ExtendedDownloader(URL url, File pathToFile,boolean newDownload, Object param) {
     this.url = url;
     size = -1;
@@ -148,7 +154,10 @@ private void breakinglink() {
               downloaded =downloadedPrev;
             }
       }
-      
+      if(newDownload){
+          downloaded=0;
+          downloadedPrev=0;
+      }
       // Specify what portion of file to download.
       connection.setRequestProperty("Range", "bytes=" + downloaded + "-");
 
@@ -156,17 +165,18 @@ private void breakinglink() {
       connection.connect();
 
         //файл уже скачан, проверка только в режиме докачки
-        if (connection.getResponseCode() == 416  && !newDownload){
-            status = COMPLETE;
-            stateChanged();
+
+        if (connection.getResponseCode() == 416 && !newDownload){
+                status = COMPLETE;
+                stateChanged();
+                return;
+        }else if (connection.getResponseCode() / 100 != 2)
+        {
+            this.breakinglink();
             return;
         }
-        // Make sure response code is in the 200 range.
-      if (connection.getResponseCode() / 100 != 2)
-      {
-       this.breakinglink();
-        return;
-      }
+
+
 
       // Check for valid content length.
       int contentLength = connection.getContentLength();
@@ -226,13 +236,11 @@ private void breakinglink() {
       
     }catch(FileNotFoundException e)
     {
-       this.breakinglink();
+        e.printStackTrace();
+       this.error();
     }
     catch (Exception e) {
       error();
-      //  System.out.println("size - downloaded ="+(size - downloaded ));
-       // System.out.println("Текцщие: size ="+size+" downloaded ="+downloaded);
-       System.out.println("ERROR DETECTED");
      e.printStackTrace();//убрать по окончанию отладки
     
     } finally {

@@ -1,9 +1,9 @@
 package org.anantacreative.updater.Update;
 
 import org.anantacreative.updater.Downloader.DownloadingTask;
-import org.anantacreative.updater.Downloader.SimpleDownloadTaskListener;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -37,7 +37,29 @@ public abstract class AbstractUpdateTaskCreator {
         this.downloadsDir = downloadsDir;
         this.listener = listener;
         this.rootDirApp = rootDirApp;
+        if(!downloadsDir.exists()) downloadsDir.mkdirs();
     }
+
+    private int currentProgress;
+    private int downloadingSize;
+
+
+    private void initProgress(int downloadingSize){
+        this.downloadingSize=downloadingSize;
+        currentProgress=0;
+    }
+
+    private void incProgress(){
+        currentProgress++;
+        if(currentProgress>downloadingSize)currentProgress=downloadingSize;
+    }
+
+    private float getProgress(){
+        if(downloadingSize==0) return 0;
+        return 100*(float)currentProgress/(float)downloadingSize;
+    }
+
+
 
     /**
      * Основной метод для создания UpdateTask. Задание по созданию UpdateTask считается выполненым если получен файл со списком команд,
@@ -49,7 +71,9 @@ public abstract class AbstractUpdateTaskCreator {
     public void createTask(boolean reload) throws CreateUpdateTaskError {
 
         try {
-            DownloadingTask dt = new DownloadingTask(getDownloadingFiles(), new SimpleDownloadTaskListener() {
+            List<DownloadingTask.DownloadingItem> downloadingFiles = getDownloadingFiles();
+            initProgress(downloadingFiles.size());
+            DownloadingTask dt = new DownloadingTask(downloadingFiles, new DownloadingTask.TaskCompleteListener() {
                 @Override
                 public void complete() {
                     try {
@@ -62,6 +86,26 @@ public abstract class AbstractUpdateTaskCreator {
                 @Override
                 public void error(String msg) {
                     listener.error(new CreateUpdateTaskError(new DownloadUpdateFilesError(msg)));
+                }
+
+                @Override
+                public void completeFile(String url, File path) {
+                    incProgress();
+                    listener.totalProgress(getProgress());
+                    listener.completeFile(url,path);
+                }
+
+                @Override
+                public void currentFileProgress(float progress) {
+                    listener.currentFileProgress(progress);
+                }
+
+                @Override
+                public void canceled() {}
+
+                @Override
+                public void nextFileStartDownloading(String url, File path) {
+                    listener.nextFileStartDownloading(url,path);
                 }
             });
             dt.download(reload);
@@ -93,6 +137,10 @@ public abstract class AbstractUpdateTaskCreator {
     public abstract UpdateTask buildUpdateTask(File downloadsDir) throws CreateUpdateTaskError;
 
 
+    public String extractFileNameFromUrl(URL url){
+        String[] split = url.getFile().split("/");
+        return split[split.length-1];
+    }
     /**
      * Ошибка плучения списка файлов для закачки
      */
@@ -168,8 +216,13 @@ public abstract class AbstractUpdateTaskCreator {
 
 
     public interface Listener {
-        void taskCompleted(UpdateTask ut);
+         void taskCompleted(UpdateTask ut);
+         void error(Exception e);
+         void completeFile(String url, File path);
+         void currentFileProgress(float progress);
+         void nextFileStartDownloading(String url, File path);
+         void totalProgress(float progress);
 
-        void error(Exception e);
+
     }
 }

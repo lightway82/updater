@@ -47,6 +47,6 @@ public class UpdateTask {
      * @return
      */
     public List<UpdateActionFileItem> getDownloadingFiles() {
-        return updateItems.stream().flatMap(f -> f.getDownloadingFiles().stream()).collect(Collectors.toList());
+        return updateItems.stream().flatMap(f -> f.getDownloadingFiles().stream()).filter(f->f.getUrl()!=null).collect(Collectors.toList());
     }
 }
