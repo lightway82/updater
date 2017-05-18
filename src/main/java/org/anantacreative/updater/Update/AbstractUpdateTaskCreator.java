@@ -4,7 +4,9 @@ import org.anantacreative.updater.Downloader.DownloadingTask;
 
 import java.io.File;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Закачивает файлы для обновления и создает UpdateTask для проведения процедуры обновления.
@@ -15,6 +17,7 @@ public abstract class AbstractUpdateTaskCreator {
     private File downloadsDir;
     private Listener listener;
     private File rootDirApp;
+    private Map<DownloadingTask.DownloadingItem, UpdateActionFileItem> itemsMap;
 
 
     public File getDownloadsDir() {
@@ -61,6 +64,14 @@ public abstract class AbstractUpdateTaskCreator {
 
 
 
+    private Map<DownloadingTask.DownloadingItem,UpdateActionFileItem> updateActionFileItemToDownloadingItem(List<UpdateActionFileItem> downloadingFiles){
+        itemsMap.clear();
+        itemsMap=new HashMap<>();
+        for (UpdateActionFileItem f : downloadingFiles) {
+            itemsMap.put(new DownloadingTask.DownloadingItem(f.getUrl(), new File(getDownloadsDir(),extractFileNameFromUrl(f.getUrl()))),f);
+        }
+        return itemsMap;
+    }
     /**
      * Основной метод для создания UpdateTask. Задание по созданию UpdateTask считается выполненым если получен файл со списком команд,
      * создан UpdateTask и закачены необходимые файлы
@@ -71,9 +82,12 @@ public abstract class AbstractUpdateTaskCreator {
     public void createTask(boolean reload) throws CreateUpdateTaskError {
 
         try {
-            List<DownloadingTask.DownloadingItem> downloadingFiles = getDownloadingFiles();
+            List<UpdateActionFileItem> downloadingFiles = getDownloadingFiles();
             initProgress(downloadingFiles.size());
-            DownloadingTask dt = new DownloadingTask(downloadingFiles, new DownloadingTask.TaskCompleteListener() {
+
+
+            DownloadingTask dt = new DownloadingTask(updateActionFileItemToDownloadingItem(downloadingFiles).keySet(),
+                    new DownloadingTask.TaskCompleteListener() {
                 @Override
                 public void complete() {
                     try {
@@ -89,10 +103,11 @@ public abstract class AbstractUpdateTaskCreator {
                 }
 
                 @Override
-                public void completeFile(String url, File path) {
+                public void completeFile(DownloadingTask.DownloadingItem item) {
                     incProgress();
+                    itemsMap.get(item).setDownloadedFile(item.getDstPath());
                     listener.totalProgress(getProgress());
-                    listener.completeFile(url,path);
+                    listener.completeFile(item.getUrl().toString(),item.getDstPath());
                 }
 
                 @Override
@@ -104,8 +119,8 @@ public abstract class AbstractUpdateTaskCreator {
                 public void canceled() {}
 
                 @Override
-                public void nextFileStartDownloading(String url, File path) {
-                    listener.nextFileStartDownloading(url,path);
+                public void nextFileStartDownloading(DownloadingTask.DownloadingItem item) {
+                    listener.nextFileStartDownloading(item.getUrl().toString(),item.getDstPath());
                 }
             });
             dt.download(reload);
@@ -125,7 +140,7 @@ public abstract class AbstractUpdateTaskCreator {
      * @return
      * @throws GetUpdateFilesError все ошибки нужно привести к GetUpdateFilesError
      */
-    public abstract List<DownloadingTask.DownloadingItem> getDownloadingFiles() throws GetUpdateFilesError;
+    public abstract List<UpdateActionFileItem> getDownloadingFiles() throws GetUpdateFilesError;
 
 
     /**

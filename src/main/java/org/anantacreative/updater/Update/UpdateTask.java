@@ -36,7 +36,7 @@ public class UpdateTask {
     /**
      * Запускает процесс выполение списка Action  для обновления
      */
-    public void update() {
+    public void update() throws UpdateActionException {
         for (UpdateTaskItem item : updateItems) item.execute();
 
     }
@@ -46,7 +46,9 @@ public class UpdateTask {
      *
      * @return
      */
-    public List<UpdateActionFileItem> getDownloadingFiles() {
+    public List<UpdateActionFileItem> getDownloadingFilesItem() {
         return updateItems.stream().flatMap(f -> f.getDownloadingFiles().stream()).filter(f->f.getUrl()!=null).collect(Collectors.toList());
     }
+
+
 }

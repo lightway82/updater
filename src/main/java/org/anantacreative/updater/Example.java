@@ -1,6 +1,7 @@
 package org.anantacreative.updater;
 
 import org.anantacreative.updater.Update.AbstractUpdateTaskCreator;
+import org.anantacreative.updater.Update.UpdateActionException;
 import org.anantacreative.updater.Update.UpdateTask;
 import org.anantacreative.updater.Update.XML.XmlUpdateTaskCreator;
 import org.anantacreative.updater.VersionCheck.DefineActualVersionError;
@@ -77,7 +78,13 @@ public class Example {
                         new AbstractUpdateTaskCreator.Listener() {
                             @Override
                             public void taskCompleted(UpdateTask ut) {
+
                                 System.out.println("Update  Task создан");
+                                try {
+                                    ut.update();
+                                } catch (UpdateActionException e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                             @Override

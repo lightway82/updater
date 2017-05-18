@@ -64,6 +64,11 @@ public class ExtendedDownloader  extends Observable implements Runnable
     this.param=param;
 
   }
+
+    /**
+     * Путь файлу в который закачиваются данные
+     * @return
+     */
   public File getFile(){return pathToFile;}
   public void startDownload(){
 // Begin the download.

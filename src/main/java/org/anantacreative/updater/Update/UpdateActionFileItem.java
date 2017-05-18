@@ -8,11 +8,28 @@ public class UpdateActionFileItem {
     private File srcPath;
     private File dstPath;
     private URL url;
+    private File downloadedFile;
 
     private UpdateActionFileItem(File srcPath, File dstPath, URL url) {
         this.srcPath = srcPath;
         this.dstPath = dstPath;
         this.url = url;
+    }
+
+    /**
+     * Путь к загруженному файлу или null если файл не загружен или не загружался
+     * @return
+     */
+    public File getDownloadedFile() {
+        return downloadedFile;
+    }
+
+    /**
+     * Устанавливает путь на диске к загруженному файлу, который был указан в URL
+     * @param downloadedFile
+     */
+    public void setDownloadedFile(File downloadedFile) {
+        this.downloadedFile = downloadedFile;
     }
 
     public File getSrcPath() {
@@ -57,5 +74,16 @@ public class UpdateActionFileItem {
         public UpdateActionFileItem build() {
             return new UpdateActionFileItem(srcPath, dstPath, url);
         }
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "UpdateActionFileItem{" +
+                "srcPath=" + srcPath +
+                ", dstPath=" + dstPath +
+                ", url=" + url +
+                '}';
     }
 }

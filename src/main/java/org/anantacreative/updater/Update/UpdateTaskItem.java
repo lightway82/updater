@@ -28,7 +28,7 @@ public class UpdateTaskItem {
         files.add(item);
     }
 
-    public void execute() {
+    public void execute() throws UpdateActionException {
         action.execute(files);
     }
 

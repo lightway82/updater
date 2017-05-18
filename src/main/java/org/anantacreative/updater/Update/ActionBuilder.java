@@ -16,40 +16,40 @@ public class ActionBuilder {
         UpdateAction action;
         switch (type) {
             case COPY_DIR:
-                action = new ActionCopyDir();
+                action = new ActionCopyDir(ActionType.COPY_DIR);
                 break;
             case COPY_FILES:
-                action = new ActionCopyFiles();
+                action = new ActionCopyFiles(ActionType.COPY_FILES);
                 break;
             case DELETE_DIR:
-                action = new ActionDeleteDir();
+                action = new ActionDeleteDir(ActionType.DELETE_DIR);
                 break;
             case DELETE_FILES:
-                action = new ActionDeleteFiles();
+                action = new ActionDeleteFiles(ActionType.DELETE_FILES);
                 break;
             case MOVE:
-                action = new ActionMove();
+                action = new ActionMove(ActionType.MOVE);
                 break;
             case MOVE_IN:
-                action = new ActionMoveIn();
+                action = new ActionMoveIn(ActionType.MOVE_IN);
                 break;
             case PACK_DIR:
-                action = new ActionPackDir();
+                action = new ActionPackDir(ActionType.PACK_DIR);
                 break;
             case PACK_FILES:
-                action = new ActionPackFiles();
+                action = new ActionPackFiles(ActionType.PACK_FILES);
                 break;
             case RENAME:
-                action = new ActionRename();
+                action = new ActionRename(ActionType.RENAME);
                 break;
             case RUN:
-                action = new ActionRun();
+                action = new ActionRun(ActionType.RUN);
                 break;
             case RUN_IN:
-                action = new ActionRunIn();
+                action = new ActionRunIn(ActionType.RUN_IN);
                 break;
             case UNPACK:
-                action = new ActionUnpack();
+                action = new ActionUnpack(ActionType.UNPACK);
                 break;
             default:
                 throw new UnknownActionError();

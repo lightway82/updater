@@ -5,7 +5,7 @@
         <File url="http://www.biomedis.ru/doc/bazovie_kompleksi/bazoviy_kompleks_gerpes.zip"  dst="tmp/tmp2"/>
     </Action>
     <Action type="Rename">
-        <File  src="tmp/tmp2/bazoviy_kompleks_gerpes.zip" dst="111.zip"/>
+        <File  src="tmp/tmp2/bazoviy_kompleks_gerpes.zip" dst="tmp/tmp2/111.zip"/>
     </Action>
     <Action type="MoveIn">
         <File  src="" dst=""/>

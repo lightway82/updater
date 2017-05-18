@@ -1,7 +1,5 @@
 package org.anantacreative.updater.Downloader;
 
-import java.io.File;
-
 /**
  * Абстрактный класс для реализации упрощенного слушателя событий загрузки.
  */
@@ -9,7 +7,7 @@ public abstract class SimpleDownloadTaskListener implements DownloadingTask.Task
 
 
     @Override
-    public void completeFile(String url, File path) {
+    public void completeFile(DownloadingTask.DownloadingItem item) {
 
     }
 
@@ -24,7 +22,7 @@ public abstract class SimpleDownloadTaskListener implements DownloadingTask.Task
     }
 
     @Override
-    public void nextFileStartDownloading(String url, File path) {
+    public void nextFileStartDownloading(DownloadingTask.DownloadingItem item) {
 
     }
 }

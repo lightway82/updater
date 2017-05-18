@@ -1,15 +1,13 @@
 package org.anantacreative.updater.Update.XML;
 
-import org.anantacreative.updater.Downloader.DownloadingTask;
 import org.anantacreative.updater.Update.AbstractUpdateTaskCreator;
+import org.anantacreative.updater.Update.UpdateActionFileItem;
 import org.anantacreative.updater.Update.UpdateTask;
 import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Реализует процесс получения UpdateTask путем парсинга xml-файла
@@ -43,9 +41,9 @@ public class XmlUpdateTaskCreator extends AbstractUpdateTaskCreator {
 
 
     @Override
-    public List<DownloadingTask.DownloadingItem> getDownloadingFiles() throws GetUpdateFilesError {
+    public List<UpdateActionFileItem> getDownloadingFiles() throws GetUpdateFilesError {
         XmlUpdateFileParser up;
-        List<DownloadingTask.DownloadingItem> res = new ArrayList<>();
+
         try {
             if (file != null) {
                 up = new XmlUpdateFileParser(file, getRootDirApp());
@@ -53,10 +51,8 @@ public class XmlUpdateTaskCreator extends AbstractUpdateTaskCreator {
                 up = new XmlUpdateFileParser(fileURL, getRootDirApp());
             }
             task = up.parse();
-            res.addAll(task.getDownloadingFiles().stream()
-                           .map(f -> new DownloadingTask.DownloadingItem(f.getUrl(), new File(getDownloadsDir(),extractFileNameFromUrl(f.getUrl()))))
-                           .collect(Collectors.toList()));
-            return res;
+            return task.getDownloadingFilesItem();
+
         } catch (SAXException e) {
             throw new GetUpdateFilesError(e);
         } catch (Exception e) {
