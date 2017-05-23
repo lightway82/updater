@@ -15,18 +15,20 @@ public class Server extends AbstractVerticle {
         return port;
     }
 
+    public Server(int port) {
+        this.port = port;
+    }
+
     @Override
     public void start(Future<Void> startFuture) throws Exception {
 
         Router router = Router.router(vertx);
-
         // Serve the static pages
         router.route().handler(StaticHandler.create());
         HttpServer server = vertx.createHttpServer();
-        server.requestHandler(router::accept).listen(0, res -> {
+        server.requestHandler(router::accept).listen(port, res -> {
             if (!res.failed()) {
-                port = server.actualPort();
-                System.out.println("Server is started");
+                System.out.println("Server is started at port = "+port);
                 startFuture.complete();
             } else startFuture.failed();
         });

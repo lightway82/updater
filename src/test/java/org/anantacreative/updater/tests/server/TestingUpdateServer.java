@@ -17,10 +17,11 @@ public class TestingUpdateServer {
         System.out.println("Server is starting...");
         System.setProperty("vertx.disableFileCaching", "true");
         vertx = Vertx.vertx();
-        server = new Server();
-        vertx.deployVerticle(new Server(), res -> {
+        server = new Server(3000);
+        vertx.deployVerticle(server, res -> {
             if (!res.failed()) {
                 started = true;
+                System.out.println(server);
             } else throw new RuntimeException("Server not running");
 
         });
@@ -38,4 +39,10 @@ public class TestingUpdateServer {
         return server.getPort();
     }
 
+
+    public static void main(String[] args) {
+
+       startServer();
+
+    }
 }
