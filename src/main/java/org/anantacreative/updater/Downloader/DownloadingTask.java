@@ -126,7 +126,6 @@ public class DownloadingTask implements Observer {
          * Путь к закачиваемому файлу на диске
          */
         private File dstPath;
-
     }
 
     public interface TaskCompleteListener {

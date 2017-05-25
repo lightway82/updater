@@ -2,5 +2,7 @@
 /target/
 /logs/
 /ufiles/
+/downloading/
+/tmp/
 updater.iml
 

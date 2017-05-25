@@ -4,12 +4,13 @@ import org.anantacreative.updater.Update.ActionType;
 import org.anantacreative.updater.Update.UpdateActionException;
 import org.anantacreative.updater.Update.UpdateActionFileItem;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
 /**
- * Перемещение файлов указанных в src в dst(путь к новому файлу, а не просто директории)
+ * Перемещение файлов указанных в src в dst(путь к новому файлу или просто директории если не нужно переименовывать)
  * Возможно переименовать сразу файлы, указав другие имена в dst
  * Также перемещение закачаных файлов указанных в URL в dst, при этом src игнорируется
  */
@@ -23,11 +24,12 @@ public class ActionMove  extends AbstractAction {
         for (UpdateActionFileItem file : files) {
             try {
                 checkAndCreateDstDir(file.getDstPath());
-                if(file.getUrl()!=null){
-                    Files.move(file.getSrcPath().toPath(),file.getDstPath().toPath());
-                }else {
-                    Files.move(file.getDownloadedFile().toPath(),file.getDstPath().toPath());
-                }
+                File src;
+                if(file.getUrl()==null)  src=file.getSrcPath();
+                else  src=file.getDownloadedFile();
+
+                if(file.getDstPath().isFile())  Files.move(src.toPath(),file.getDstPath().toPath());
+                else if(file.getDstPath().isDirectory()) Files.move(src.toPath(),new File(file.getDstPath(),file.getDownloadedFile().getName()).toPath());
 
             } catch (IOException e) {
                throw new UpdateActionException(getActionType(),file,e);

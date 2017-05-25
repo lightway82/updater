@@ -24,9 +24,14 @@ public abstract class AbstractAction implements UpdateAction {
      * @param dstFile
      */
     public void checkAndCreateDstDir(File dstFile) throws Exception {
-        File dstDir = dstFile.getParentFile();
-        if(!dstDir.exists()) {
-            if(dstDir.mkdirs()==false) throw new Exception("Directory created with error;");
+        File dstDir;
+
+        if (dstFile.isDirectory()) dstDir = dstFile.getParentFile();
+        else dstDir = dstFile;
+
+        if (!dstDir.exists()) {
+            if (dstDir.mkdirs() == false)
+                throw new Exception("Directory created with error; " + dstDir.getAbsolutePath());
         }
     }
 }

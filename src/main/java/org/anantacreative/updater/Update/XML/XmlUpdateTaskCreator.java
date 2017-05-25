@@ -1,13 +1,11 @@
 package org.anantacreative.updater.Update.XML;
 
 import org.anantacreative.updater.Update.AbstractUpdateTaskCreator;
-import org.anantacreative.updater.Update.UpdateActionFileItem;
 import org.anantacreative.updater.Update.UpdateTask;
 import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
 
 /**
  * Реализует процесс получения UpdateTask путем парсинга xml-файла
@@ -15,7 +13,7 @@ import java.util.List;
 public class XmlUpdateTaskCreator extends AbstractUpdateTaskCreator {
     private File file;
     private URL fileURL;
-    private UpdateTask task;
+
 
     /**
      * @param downloadsDir папка загрузки
@@ -40,10 +38,12 @@ public class XmlUpdateTaskCreator extends AbstractUpdateTaskCreator {
     }
 
 
-    @Override
-    public List<UpdateActionFileItem> getDownloadingFiles() throws GetUpdateFilesError {
-        XmlUpdateFileParser up;
 
+
+    @Override
+    protected UpdateTask buildUpdateTask(File downloadsDir) throws CreateUpdateTaskError {
+        XmlUpdateFileParser up;
+        UpdateTask task;
         try {
             if (file != null) {
                 up = new XmlUpdateFileParser(file, getRootDirApp());
@@ -51,17 +51,13 @@ public class XmlUpdateTaskCreator extends AbstractUpdateTaskCreator {
                 up = new XmlUpdateFileParser(fileURL, getRootDirApp());
             }
             task = up.parse();
-            return task.getDownloadingFilesItem();
+
 
         } catch (SAXException e) {
-            throw new GetUpdateFilesError(e);
+            throw new CreateUpdateTaskError(e);
         } catch (Exception e) {
-            throw new GetUpdateFilesError(e);
+            throw new CreateUpdateTaskError(e);
         }
-    }
-
-    @Override
-    public UpdateTask buildUpdateTask(File downloadsDir) throws CreateUpdateTaskError {
         return task;
     }
 }

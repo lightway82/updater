@@ -30,7 +30,7 @@ public abstract class AbstractVersionChecker {
         return currentVersion.lessThen(actualVersion);
     }
 
-   public abstract Version getVersionForUpdate() throws DefineActualVersionError;
+   protected abstract Version getVersionForUpdate() throws DefineActualVersionError;
 
 
 

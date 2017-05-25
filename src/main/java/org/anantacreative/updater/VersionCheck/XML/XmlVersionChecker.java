@@ -19,7 +19,7 @@ public class XmlVersionChecker extends AbstractVersionChecker {
     }
 
     @Override
-    public Version getVersionForUpdate() throws DefineActualVersionError {
+    protected Version getVersionForUpdate() throws DefineActualVersionError {
 
         try {
             XmlVersionParser versionParser = new XmlVersionParser(versionFile);

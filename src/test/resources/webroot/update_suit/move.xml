@@ -1,0 +1,7 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<Update date="16.05.2017">
+    <Action type="Move">
+        <File url="http://localhost:3000/update/file1.txt"  dst="tmp"/>
+        <File url="http://localhost:3000/update/file2.txt"  dst="tmp/tmp2"/>
+    </Action>
+</Update>

@@ -1,0 +1,6 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<Update date="16.05.2017">
+    <Action type="Rename">
+        <File  src="tmp/tmp2/bazoviy_kompleks_gerpes.zip" dst="tmp/tmp2/111.zip"/>
+    </Action>
+</Update>
