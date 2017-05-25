@@ -1,8 +1,7 @@
-package org.anantacreative.updater.tests;
+package org.anantacreative.updater.tests.UpdateTests;
 
 import org.anantacreative.updater.FilesUtil;
 import org.anantacreative.updater.Update.AbstractUpdateTaskCreator;
-import org.anantacreative.updater.Update.UpdateActionException;
 import org.anantacreative.updater.Update.UpdateTask;
 import org.anantacreative.updater.Update.XML.XmlUpdateTaskCreator;
 import org.anantacreative.updater.tests.server.TestingUpdateServer;
@@ -20,9 +19,9 @@ import static org.testng.AssertJUnit.*;
 /**
  *
  */
-public class UpdateTest {
+public abstract class BaseActionTest {
 
-private static class Value<T>{
+protected static class Value<T>{
     private T value;
     private boolean present;
     private boolean error;
@@ -62,17 +61,25 @@ private static class Value<T>{
     }
 
     @BeforeTest
-    public void clearing(){
+    public void clearing() throws Exception {
        File dir = new File("./tmp");
         if(dir.exists())  assertTrue(FilesUtil.recursiveDelete(dir));
+        else dir.mkdir();
         File dirDownloading = new File("./downloading");
         if(dirDownloading.exists())  assertTrue(FilesUtil.recursiveDelete(dirDownloading));
+        else dirDownloading.mkdir();
+
+        beforeTest();
     }
 
-    @Test
-    public void moveTest() throws UpdateActionException, MalformedURLException, SAXException, AbstractUpdateTaskCreator.CreateUpdateTaskError, InterruptedException {
-            Value<UpdateTask> updateTaskValue = new Value<>();
-         createTask("move.xml", new SimpleUpdateTaskCreatorListener() {
+
+
+
+        @Test
+    public  void test() throws Exception {
+        String updateXml = getUpdateXmlName();
+        Value<UpdateTask> updateTaskValue = new Value<>();
+        createTask(updateXml, new SimpleUpdateTaskCreatorListener() {
             @Override
             public void taskCompleted(UpdateTask ut) {
                 updateTaskValue.setValue(ut);
@@ -86,9 +93,9 @@ private static class Value<T>{
 
         });
 
-         while (!updateTaskValue.isComplete()){
-             Thread.sleep(500);
-         }
+        while (!updateTaskValue.isComplete()){
+            Thread.sleep(500);
+        }
 
         if (!updateTaskValue.isPresent()) fail("Значение UpdateTask не получено");
         UpdateTask ut=updateTaskValue.getValue();
@@ -101,23 +108,20 @@ private static class Value<T>{
             e.printStackTrace();
             fail("Ошибка выполнения Action Move обновления");
         }
-
-
-        File dir=new File("./tmp");
-        if(!dir.exists()) fail("Отсутствует директория ./tmp  конечной загрузки");
-        File dir2=new File(dir,"tmp2");
-        if(!dir2.exists())  fail("Отсутствует директория ./tmp/tmp2  конечной загрузки");
-
-        File file1=new File(dir,"file1.txt");
-        File file2=new File(dir2,"file2.txt");
-
-
-        if(!file1.exists()) fail();
-        if(!file2.exists()) fail();
-
-
+        testLogic(ut);
     }
 
+    protected abstract void testLogic(UpdateTask ut) throws Exception;
+
+    /**
+     * логика до теста
+     */
+    protected abstract void beforeTest() throws Exception;
+    /**
+     * Должен вернуть имя файла update.xml для тесте из папки update_suit
+     * @return
+     */
+    protected abstract String getUpdateXmlName();
 
     private void createTask(String updateFileName, AbstractUpdateTaskCreator.Listener listener) throws MalformedURLException, SAXException, AbstractUpdateTaskCreator.CreateUpdateTaskError {
         UpdateTask task=null;

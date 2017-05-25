@@ -1,0 +1,7 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<Update date="16.05.2017">
+    <Action type="Move">
+        <File url="" src="tmp/f1.txt"  dst="tmp/tmp2/fff1.txt"/>
+        <File url="" src="tmp/f2.txt"  dst="tmp/tmp2/fff2.txt"/>
+    </Action>
+</Update>
