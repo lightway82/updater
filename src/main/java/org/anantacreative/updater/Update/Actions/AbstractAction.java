@@ -1,5 +1,6 @@
 package org.anantacreative.updater.Update.Actions;
 
+import org.anantacreative.updater.FilesUtil;
 import org.anantacreative.updater.Update.ActionType;
 import org.anantacreative.updater.Update.UpdateAction;
 
@@ -26,8 +27,12 @@ public abstract class AbstractAction implements UpdateAction {
     public void checkAndCreateDstDir(File dstFile) throws Exception {
         File dstDir;
 
-        if (dstFile.isDirectory()) dstDir = dstFile.getParentFile();
-        else dstDir = dstFile;
+        if (FilesUtil.isFile(dstFile)) {
+            dstDir = dstFile.getParentFile();
+        }
+        else {
+            dstDir = dstFile;
+        }
 
         if (!dstDir.exists()) {
             if (dstDir.mkdirs() == false)

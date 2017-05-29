@@ -1,5 +1,6 @@
 package org.anantacreative.updater.Update.Actions;
 
+import org.anantacreative.updater.FilesUtil;
 import org.anantacreative.updater.Update.ActionType;
 import org.anantacreative.updater.Update.UpdateActionException;
 import org.anantacreative.updater.Update.UpdateActionFileItem;
@@ -28,8 +29,8 @@ public class ActionMove  extends AbstractAction {
                 if(file.getUrl()==null)  src=file.getSrcPath();
                 else  src=file.getDownloadedFile();
 
-                if(file.getDstPath().isFile())  Files.move(src.toPath(),file.getDstPath().toPath());
-                else if(file.getDstPath().isDirectory()) Files.move(src.toPath(),new File(file.getDstPath(),file.getDownloadedFile().getName()).toPath());
+                if(FilesUtil.isFile(file.getDstPath()))  Files.move(src.toPath(),file.getDstPath().toPath());
+                else  Files.move(src.toPath(),new File(file.getDstPath(),file.getDownloadedFile().getName()).toPath());
 
             } catch (IOException e) {
                throw new UpdateActionException(getActionType(),file,e);

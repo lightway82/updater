@@ -5,7 +5,9 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
+import static org.testng.AssertJUnit.assertTrue;
 import static org.testng.AssertJUnit.fail;
 
 /**
@@ -42,6 +44,38 @@ public class FilesUtilTest {
 
             if(dir.exists()) fail("Директория ./tmp должна быть удалена");
 
+
+    }
+
+    @Test
+    public void recursiveClearTest() throws IOException {
+
+        initTestDir();
+        File dir = new File("./tmp");
+        if(!FilesUtil.recursiveClear(dir)) fail();
+
+        if(!dir.exists()) fail("Директория ./tmp не должна быть удалена");
+
+
+    }
+
+    @Test
+    public void checkFileOrDirectory() throws IOException {
+        initTestDir();
+        File dir=new File("./tmp");
+
+        boolean isDirectory =  FilesUtil.isDirectory(dir);
+        assertTrue(isDirectory);
+
+        boolean isFile =FilesUtil.isFile(new File(dir,"file1.txt"));
+        assertTrue(isFile);
+
+        dir=new File("./"+ UUID.randomUUID().toString());
+        boolean isDirectoryNotExist =  FilesUtil.isDirectory(dir);
+        assertTrue(isDirectoryNotExist);
+
+        boolean isFileNotExist =FilesUtil.isFile(new File(dir,"not_exist_file.txt"));
+        assertTrue(isFileNotExist);
 
     }
 

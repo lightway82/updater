@@ -63,7 +63,7 @@ protected static class Value<T>{
     @BeforeTest
     public void clearing() throws Exception {
        File dir = new File("./tmp");
-        if(dir.exists())  assertTrue(FilesUtil.recursiveDelete(dir));
+        if(dir.exists())  assertTrue(FilesUtil.recursiveClear(dir));
         else dir.mkdir();
         File dirDownloading = new File("./downloading");
         if(dirDownloading.exists())  assertTrue(FilesUtil.recursiveDelete(dirDownloading));
