@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 <Update date="16.05.2017">
     <Action type="Rename">
-        <File  src="tmp/tmp2/file1.txt" dst="tmp/tmp2/111.zip"/>
+        <File  src="tmp/tmp2/" dst="tmp/tmp3/"/>
     </Action>
 </Update>

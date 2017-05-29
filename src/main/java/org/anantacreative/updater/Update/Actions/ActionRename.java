@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * Переименование файла из src в dst. Оба параметра пути от корня программы.
  * При заддании другой директории будет перемещение файла с переименованием.
+ *  Можно переименовывать директории
  */
 public class ActionRename  extends AbstractAction {
     public ActionRename(ActionType actionType) {
@@ -21,7 +22,7 @@ public class ActionRename  extends AbstractAction {
     public void execute(List<UpdateActionFileItem> files) throws UpdateActionException {
         for (UpdateActionFileItem file : files) {
             try {
-                checkAndCreateDstDir(file.getDstPath());
+
                 Files.move(file.getSrcPath().toPath(),file.getDstPath().toPath());
             } catch (IOException e) {
                 throw new UpdateActionException(getActionType(),file,e);
