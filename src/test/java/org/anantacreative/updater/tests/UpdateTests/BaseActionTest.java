@@ -6,7 +6,7 @@ import org.anantacreative.updater.Update.UpdateTask;
 import org.anantacreative.updater.Update.XML.XmlUpdateTaskCreator;
 import org.anantacreative.updater.tests.server.TestingUpdateServer;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
@@ -60,7 +60,7 @@ protected static class Value<T>{
         TestingUpdateServer.startServer();
     }
 
-    @BeforeTest
+    @BeforeMethod
     public void clearing() throws Exception {
        File dir = new File("./tmp");
         if(dir.exists())  assertTrue(FilesUtil.recursiveClear(dir));
@@ -68,7 +68,7 @@ protected static class Value<T>{
         File dirDownloading = new File("./downloading");
         if(dirDownloading.exists())  assertTrue(FilesUtil.recursiveDelete(dirDownloading));
         else dirDownloading.mkdir();
-
+        System.out.println("ssdas");
         beforeTest();
     }
 
