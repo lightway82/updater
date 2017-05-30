@@ -1,12 +1,15 @@
 package org.anantacreative.updater.Update.Actions;
 
+import org.anantacreative.updater.FilesUtil;
 import org.anantacreative.updater.Update.ActionType;
+import org.anantacreative.updater.Update.UpdateActionException;
 import org.anantacreative.updater.Update.UpdateActionFileItem;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- *
+ *Удаление списка файлов
  */
 public class ActionDeleteFiles  extends AbstractAction {
     public ActionDeleteFiles(ActionType actionType) {
@@ -14,7 +17,12 @@ public class ActionDeleteFiles  extends AbstractAction {
     }
 
     @Override
-    public void execute(List<UpdateActionFileItem> files) {
+    public void execute(List<UpdateActionFileItem> files) throws UpdateActionException {
+        try {
+            FilesUtil.deleteFiles(files.stream().map(file->file.getSrcPath()).collect(Collectors.toList()));
+        } catch (Exception e) {
+            throw new UpdateActionException(getActionType(), UpdateActionFileItem.create().build(),e);
+        }
 
     }
 }
