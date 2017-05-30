@@ -1,6 +1,7 @@
 package org.anantacreative.updater;
 
 import java.io.File;
+import java.util.List;
 
 /**
  *
@@ -87,5 +88,18 @@ public class FilesUtil {
         return name.contains(".");
     }
 
+
+    /**
+     * Удаление списка файлов
+     * @param files
+     * @throws Exception
+     */
+    public static void deleteFiles(List<File> files) throws Exception {
+        for (File file : files) {
+            if(!file.exists()) continue;
+            if(!file.delete()) throw new Exception("Delete file error "+file.getAbsolutePath() );
+        }
+
+    }
 
 }
