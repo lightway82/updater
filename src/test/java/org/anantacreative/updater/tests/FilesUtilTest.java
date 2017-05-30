@@ -1,62 +1,75 @@
 package org.anantacreative.updater.tests;
 
 import org.anantacreative.updater.FilesUtil;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.testng.AssertJUnit.assertTrue;
 import static org.testng.AssertJUnit.fail;
 
-/**
- *
- */
+
 public class FilesUtilTest {
 
-    private void initTestDir() throws IOException {
+    @BeforeMethod
+    public void beforeTests() throws Exception {
+        TestUtils.initTestDir(new File("./tmp"));
+    }
 
-        File dir=new File("./tmp");
-        if(!dir.exists()) {
-            if(!dir.mkdir()) throw new IOException();
-        }else FilesUtil.recursiveClear(dir);
-        File dir2=new File(dir,"tmp2");
-        if(!dir2.exists()) {
-            if(!dir2.mkdir()) throw new IOException();
-        }
-        File file1=new File(dir,"file1.txt");
-        file1.createNewFile();
-        File file2=new File(dir2,"file2.txt");
-        file2.createNewFile();
-        File file3=new File(dir2,"file3.txt");
-        file3.createNewFile();
+    @Test
+    public void initDirectoryTest() throws Exception {
+        File dir =new File("./tmp/test");
+        List<File> files = TestUtils.initDirectory(dir, Arrays.asList("file1.txt", "file2.txt"));
 
-        if(!file1.exists()) throw new IOException();
-        if(!file2.exists()) throw new IOException();
-        if(!file3.exists()) throw new IOException();
+        List<String> dirFiles = Stream.of(dir.list()).collect(Collectors.toList());
+        assertTrue(dir.exists());
+        assertTrue(dirFiles.size() == files.size());
+
+        assertTrue(dirFiles.contains("file1.txt"));
+        assertTrue(dirFiles.contains("file2.txt"));
 
     }
 
     @Test
-    public void recursiveDeleteTest() throws IOException {
+    public void initDirectoryWithFilesTest() throws Exception {
+        File dir =new File("./tmp/test");
+        List<File> files = TestUtils.initDirWithFiles(dir,2,"file","txt");
+        List<String> dirFiles = Stream.of(dir.list()).collect(Collectors.toList());
+        assertTrue(dir.exists());
+        assertTrue(dirFiles.size() == files.size());
 
-            initTestDir();
-            File dir = new File("./tmp");
+        assertTrue(dirFiles.contains("file1.txt"));
+        assertTrue(dirFiles.contains("file2.txt"));
+
+    }
+
+
+
+    @Test
+    public void recursiveDeleteTest() throws Exception {
+            File dir = new File("./tmp/tmp2");
+            TestUtils.initDirWithFiles(dir,4,"file","txt");
+
             if(!FilesUtil.recursiveDelete(dir)) fail();
 
-            if(dir.exists()) fail("Директория ./tmp должна быть удалена");
+            if(dir.exists()) fail("Директория "+dir.getPath()+" должна быть удалена");
 
 
     }
 
     @Test
-    public void recursiveClearTest() throws IOException {
+    public void recursiveClearTest() throws Exception {
 
-        initTestDir();
-        File dir = new File("./tmp");
+        File dir = new File("./tmp/tmp2");
+        TestUtils.initDirWithFiles(dir,4,"file","txt");
+
         if(!FilesUtil.recursiveClear(dir)) fail();
 
         if(!dir.exists()) fail("Директория ./tmp не должна быть удалена");
@@ -65,8 +78,8 @@ public class FilesUtilTest {
     }
 
     @Test
-    public void checkFileOrDirectory() throws IOException {
-        initTestDir();
+    public void checkFileOrDirectory() throws Exception {
+
         File dir=new File("./tmp");
 
         boolean isDirectory =  FilesUtil.isDirectory(dir);
@@ -86,27 +99,44 @@ public class FilesUtilTest {
 
     @Test
     public void deleteFiles() throws Exception {
-        initTestDir();
-        File dir=new File("./tmp/tmp2");
-        List<File> files= Arrays.asList(
-                new File(dir,"file1.txt"),
-                new File(dir,"file2.txt"),
-                new File(dir,"file3.txt")
-        );
-        for (File file : files) {
-            if(!file.exists()){
-                if(!file.createNewFile()) fail("Test file not created");
-            }
-
-            assertTrue("Test file not exists",file.exists());
-        }
-
+        File dir = new File("./tmp/tmp2");
+        List<File> files = TestUtils.initDirWithFiles(dir, 4, "file", "txt");
         FilesUtil.deleteFiles(files);
-
 
         assertTrue("Файлы не удалены",files.stream().filter(file -> file.exists()).count()==0);
 
+    }
 
+
+    @Test
+    public void copyFiles() throws Exception {
+
+        File srcDir = new File("./tmp/dst");
+        List<File> files = TestUtils.initDirWithFiles(srcDir, 4, "file", "txt");
+        File dstDir = new File("./tmp/dst");
+        TestUtils.initDirectory(dstDir, Collections.emptyList());
+
+        FilesUtil.copyFiles(files, dstDir);
+        assertTrue(dstDir.listFiles().length==files.size());
+
+    }
+
+    @Test
+    public void copyDir() throws Exception {
+
+        File dstDir = new File("./tmp/dst");
+        TestUtils.initDirectory(dstDir, Collections.emptyList());
+
+        File srcDir = new File("./tmp/dst");
+        List<File> files = TestUtils.initDirWithFiles(srcDir, 4, "file", "txt");
+
+
+        FilesUtil.copyDir(srcDir, dstDir);
+
+        assertTrue(dstDir.listFiles().length==1);
+        File[] dstDirDirs = dstDir.listFiles(File::isDirectory);
+        assertTrue("Directory not copied",dstDirDirs.length==1);
+        assertTrue("Directory's files not copied",dstDirDirs[0].listFiles().length==files.size());
 
     }
 

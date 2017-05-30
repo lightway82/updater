@@ -102,4 +102,23 @@ public class FilesUtil {
 
     }
 
+    /**
+     * Коприровать файлы в папку
+     * @param srcFiles список файлов для копирования
+     * @param toDir директория в которую будут копироваться файлы
+     */
+    public static void copyFiles(List<File> srcFiles,File toDir){
+
+    }
+
+    /**
+     * Копировать папку в папку.
+     * @param srcDir директория которая будет копироваться
+     * @param toDir директория в которую скопируется srcDir
+     */
+    public static void copyDir(File srcDir, File toDir){
+
+    }
+
+
 }
