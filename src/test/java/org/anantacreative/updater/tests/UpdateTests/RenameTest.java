@@ -13,8 +13,8 @@ public class RenameTest extends BaseActionTest {
     @Override
     protected void testLogic(UpdateTask ut) throws Exception {
 
-        File dir=new File("./tmp");
-        File dir2=new File(dir,"tmp2");
+
+        File dir2=new File(getTestDir(),"tmp2");
         if(!dir2.exists())  fail("Отсутствует директория ./tmp/tmp2  конечной загрузки");
 
         File file1=new File(dir2,"111.zip");
@@ -28,8 +28,8 @@ public class RenameTest extends BaseActionTest {
 
     @Override
     protected void beforeTest() throws Exception {
-        File dir=new File("./tmp");
-        File dir2=new File(dir,"tmp2");
+
+        File dir2=new File(getTestDir(),"tmp2");
         if(!dir2.exists()) dir2.mkdir();
 
         Files.createFile(new File(dir2,"file1.txt").toPath());

@@ -21,7 +21,7 @@ public class MoveTest3 extends BaseActionTest {
 
 
 
-        File dir2=new File(new File("./tmp"),"tmp2");
+        File dir2=new File(getTestDir(),"tmp2");
         if(!dir2.exists())  fail("Отсутствует директория ./tmp/tmp2  конечной загрузки");
 
         File file1=new File(dir2,"fff1.txt");
@@ -34,10 +34,10 @@ public class MoveTest3 extends BaseActionTest {
 
     @Override
     protected void beforeTest() throws Exception {
-        File dir=new File("./tmp");
 
-        Files.createFile(new File(dir,"f1.txt").toPath());
-        Files.createFile(new File(dir,"f2.txt").toPath());
+
+        Files.createFile(new File(getTestDir(),"f1.txt").toPath());
+        Files.createFile(new File(getTestDir(),"f2.txt").toPath());
     }
 
 

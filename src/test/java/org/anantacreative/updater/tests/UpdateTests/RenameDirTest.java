@@ -1,28 +1,32 @@
 package org.anantacreative.updater.tests.UpdateTests;
 
 import org.anantacreative.updater.Update.UpdateTask;
+import org.anantacreative.updater.tests.TestUtils;
 
 import java.io.File;
+import java.util.Collections;
 
 import static org.testng.AssertJUnit.fail;
 
 
 public class RenameDirTest extends BaseActionTest {
 
+    private static final String SRC_DIR_NAME="tmp2";
+    private static final String DST_DIR_NAME="tmp3";
+
     @Override
     protected void testLogic(UpdateTask ut) throws Exception {
 
 
-        File dir=new File("./tmp/tmp3");
-        if(!dir.exists())  fail("Отсутствует конечная директория ./tmp/tmp3");
+        File dir=new File(getTestDir(),DST_DIR_NAME);
+        if(!dir.exists())  fail("Отсутствует конечная директория "+dir.getPath());
 
     }
 
     @Override
     protected void beforeTest() throws Exception {
-        File dir=new File("./tmp/");
-        File dir2=new File(dir,"tmp2");
-        if(!dir2.exists()) dir2.mkdir();
+
+        TestUtils.initDirectory(new File(getTestDir(),SRC_DIR_NAME), Collections.emptyList());
 
 
     }

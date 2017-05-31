@@ -12,23 +12,23 @@ import static org.testng.AssertJUnit.assertTrue;
 
 public class CopyFilesTest extends BaseActionTest {
 
-    private static File TEST_DIR = new File("./tmp");
+
     private static int NUM_FILES=4;
 
     @Override
     protected void testLogic(UpdateTask ut) throws Exception {
-        File dstDir = new File(TEST_DIR,"dst");
+        File dstDir = new File(getTestDir(),"dst");
         assertTrue(dstDir.listFiles().length == NUM_FILES);
     }
 
     @Override
     protected void beforeTest() throws Exception {
-        TestUtils.initTestDir(TEST_DIR);
 
-        File srcDir = new File(TEST_DIR,"src");
+
+        File srcDir = new File(getTestDir(),"src");
         List<File> files = TestUtils.initDirWithFiles(srcDir, 4, "file", "txt");
 
-        File dstDir = new File(TEST_DIR,"dst");
+        File dstDir = new File(getTestDir(),"dst");
         TestUtils.initDirectory(dstDir, Collections.emptyList());
 
 

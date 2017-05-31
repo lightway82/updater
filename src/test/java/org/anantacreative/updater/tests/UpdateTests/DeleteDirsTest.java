@@ -1,12 +1,11 @@
 package org.anantacreative.updater.tests.UpdateTests;
 
 import org.anantacreative.updater.Update.UpdateTask;
+import org.anantacreative.updater.tests.TestUtils;
 
 import java.io.File;
-import java.util.UUID;
 
 import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
 
 
 public class DeleteDirsTest extends BaseActionTest {
@@ -14,7 +13,7 @@ public class DeleteDirsTest extends BaseActionTest {
     @Override
     protected void testLogic(UpdateTask ut) throws Exception {
 
-        File dir=new File("./tmp/tmp2");
+         File dir=new File(getTestDir(),"tmp2");
          assertFalse("Directory not deleted",dir.exists());
 
 
@@ -22,12 +21,10 @@ public class DeleteDirsTest extends BaseActionTest {
 
     @Override
     protected void beforeTest() throws Exception {
-        File dir = new File("./tmp/tmp2");
-        if(!dir.exists()) dir.mkdir();
-        assertTrue(dir.exists());
-        File f = new File(dir,UUID.randomUUID().toString());
-        f.createNewFile();
-        assertTrue(f.exists());
+
+        TestUtils.initDirWithFiles(new File(getTestDir(),"tmp2"),4,"test","txt");
+
+
     }
 
     @Override

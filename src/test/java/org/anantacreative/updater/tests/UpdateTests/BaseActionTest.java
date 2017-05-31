@@ -4,6 +4,7 @@ import org.anantacreative.updater.FilesUtil;
 import org.anantacreative.updater.Update.AbstractUpdateTaskCreator;
 import org.anantacreative.updater.Update.UpdateTask;
 import org.anantacreative.updater.Update.XML.XmlUpdateTaskCreator;
+import org.anantacreative.updater.tests.TestUtils;
 import org.anantacreative.updater.tests.server.TestingUpdateServer;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -55,6 +56,12 @@ protected static class Value<T>{
     }
 }
 
+   private static File TEST_DIR=new File("./tmp");
+
+   public static File getTestDir(){
+        return TEST_DIR;
+   }
+
     @BeforeClass
     public void init(){
         TestingUpdateServer.startServer();
@@ -62,9 +69,8 @@ protected static class Value<T>{
 
     @BeforeMethod
     public void clearing() throws Exception {
-       File dir = new File("./tmp");
-        if(dir.exists())  assertTrue(FilesUtil.recursiveClear(dir));
-        else dir.mkdir();
+
+        TestUtils.initTestDir(TEST_DIR);
         File dirDownloading = new File("./downloading");
         if(dirDownloading.exists())  assertTrue(FilesUtil.recursiveDelete(dirDownloading));
         else dirDownloading.mkdir();
