@@ -74,7 +74,7 @@ protected static class Value<T>{
         File dirDownloading = new File("./downloading");
         if(dirDownloading.exists())  assertTrue(FilesUtil.recursiveDelete(dirDownloading));
         else dirDownloading.mkdir();
-        System.out.println("ssdas");
+
         beforeTest();
     }
 
