@@ -1,7 +1,11 @@
 package org.anantacreative.updater;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -103,21 +107,46 @@ public class FilesUtil {
     }
 
     /**
-     * Коприровать файлы в папку
+     * Коприровать файлы в директорию. Конечная дректория должна существовать
      * @param srcFiles список файлов для копирования
      * @param toDir директория в которую будут копироваться файлы
      */
-    public static void copyFiles(List<File> srcFiles,File toDir){
-
+    public static void copyFilesToDir(List<File> srcFiles, File toDir) throws IOException {
+        for (File srcFile : srcFiles) {
+            copyFileToDir(srcFile,toDir);
+        }
     }
 
     /**
-     * Копировать папку в папку.
+     * Копировать директорию в директорию. Конечная дректория должна существовать
      * @param srcDir директория которая будет копироваться
      * @param toDir директория в которую скопируется srcDir
      */
-    public static void copyDir(File srcDir, File toDir){
+    public static void copyDirToDir(File srcDir, File toDir) throws IOException {
+        File dstDir=new File(toDir,srcDir.getName());
+        List<File> srcFiles = Stream.of(srcDir.listFiles()).collect(Collectors.toList());
+        dstDir.mkdirs();
+        copyFilesToDir(srcFiles,dstDir);
+    }
 
+
+    /**
+     * Коприровать файл в директорию. Конечная дректория должна существовать
+     * @param srcFile  файл для копирования
+     * @param toDir директория в которую будут копироваться файлы
+     */
+    public static void copyFileToDir(File srcFile, File toDir) throws IOException {
+        File toDstFile =new File(toDir,srcFile.getName());
+        copyFileToFile(srcFile,toDstFile);
+    }
+
+    /**
+     * Коприровать файл в файл. Конечная дректория должна существовать
+     * @param srcFile  файл для копирования
+     * @param toDstFile файл в который будет копирование
+     */
+    public static void copyFileToFile(File srcFile, File toDstFile) throws IOException {
+        Files.copy(srcFile.toPath(),toDstFile.toPath());
     }
 
 

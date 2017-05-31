@@ -1,0 +1,9 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<Update date="16.05.2017">
+    <Action type="CopyFiles">
+        <File  src="./tmp/src/file1.txt" dst="./tmp/dst"/>
+        <File  src="./tmp/src/file2.txt" dst="./tmp/dst/ffilee.txt"/>
+        <File  src="./tmp/src/file3.txt" dst="./tmp/dst"/>
+        <File  src="./tmp/src/file4.txt" dst="./tmp/dst"/>
+    </Action>
+</Update>
