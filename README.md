@@ -4,4 +4,4 @@ Framework для создания автоматических обновлен�
 
 Framework for creating automatic updates in java-applications.
 Implemented the update process through xml-files. You can create your own update strategies based on it.
-** Not yet completed! **
+**Not yet completed!**
