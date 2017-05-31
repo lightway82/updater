@@ -30,9 +30,6 @@ public class ActionBuilder {
             case MOVE:
                 action = new ActionMove(ActionType.MOVE);
                 break;
-            case MOVE_IN:
-                action = new ActionMoveIn(ActionType.MOVE_IN);
-                break;
             case PACK_DIR:
                 action = new ActionPackDir(ActionType.PACK_DIR);
                 break;
@@ -45,9 +42,7 @@ public class ActionBuilder {
             case RUN:
                 action = new ActionRun(ActionType.RUN);
                 break;
-            case RUN_IN:
-                action = new ActionRunIn(ActionType.RUN_IN);
-                break;
+
             case UNPACK:
                 action = new ActionUnpack(ActionType.UNPACK);
                 break;

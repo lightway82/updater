@@ -7,14 +7,12 @@ public enum ActionType {
 
     MOVE("Move"),
     RENAME("Rename"),
-    MOVE_IN("MoveIn"),
     DELETE_DIR("DeleteDir"),
     DELETE_FILES("DeleteFiles"),
     UNPACK("Unpack"),
     PACK_DIR("PackDir"),
     PACK_FILES("PackFiles"),
     RUN("Run"),
-    RUN_IN("RunIn"),
     COPY_FILES("CopyFiles"),
     COPY_DIR("CopyDir"),
     UNKNOWN("");

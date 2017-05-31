@@ -7,9 +7,6 @@
     <Action type="Rename">
         <File  src="tmp/tmp2/bazoviy_kompleks_gerpes.zip" dst="tmp/tmp2/111.zip"/>
     </Action>
-    <Action type="MoveIn">
-        <File  src="" dst=""/>
-    </Action>
     <Action type="DeleteDir">
         <File  src="" />
     </Action>
@@ -28,9 +25,7 @@
     <Action type="Run">
         <File url="" />
     </Action>
-    <Action type="RunIn">
-        <File  src="" />
-    </Action>
+
     <Action type="CopyFiles">
         <File  src="" dst=""/>
     </Action>
