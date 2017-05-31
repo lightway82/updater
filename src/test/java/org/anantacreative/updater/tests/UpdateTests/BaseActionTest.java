@@ -112,7 +112,7 @@ protected static class Value<T>{
             ut.update();
         } catch (Exception e) {
             e.printStackTrace();
-            fail("Ошибка выполнения Action Move обновления");
+            fail("Ошибка выполнения Action  обновления. \n"+ e.getMessage());
         }
         testLogic(ut);
     }
