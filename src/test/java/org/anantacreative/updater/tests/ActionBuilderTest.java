@@ -26,19 +26,7 @@ public class ActionBuilderTest {
         }
     }
 
-    @Test
-    public void buildMoveIn() {
-        try {
-            UpdateAction action = ActionBuilder.build(ActionType.MOVE_IN);
-            if (!(action instanceof ActionMoveIn)) org.testng.AssertJUnit.fail("Ожидается ActionMoveIn");
 
-            action = ActionBuilder.build(ActionType.MOVE_IN.getTypeName());
-            if (!(action instanceof ActionMoveIn)) org.testng.AssertJUnit.fail("Ожидается ActionMoveIn");
-
-        } catch (ActionBuilder.UnknownActionError e) {
-            org.testng.AssertJUnit.fail("Ожидается ActionMoveIn. Получено исключение ActionBuilder.UnknownActionError");
-        }
-    }
 
     @Test
     public void buildCopyFiles() {
@@ -156,19 +144,6 @@ public class ActionBuilderTest {
         }
     }
 
-    @Test
-    public void buildRunIn() {
-        try {
-            UpdateAction action = ActionBuilder.build(ActionType.RUN_IN);
-            if (!(action instanceof ActionRunIn)) org.testng.AssertJUnit.fail("Ожидается ActionRunIn");
-
-            action = ActionBuilder.build(ActionType.RUN_IN.getTypeName());
-            if (!(action instanceof ActionRunIn)) org.testng.AssertJUnit.fail("Ожидается ActionRunIn");
-
-        } catch (ActionBuilder.UnknownActionError e) {
-            org.testng.AssertJUnit.fail("Ожидается ActionRunIn. Получено исключение ActionBuilder.UnknownActionError");
-        }
-    }
 
     @Test
     public void buildUnpack() {
