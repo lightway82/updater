@@ -3,8 +3,9 @@ package org.anantacreative.updater.tests;
 import org.anantacreative.updater.FilesUtil;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
 import static org.testng.AssertJUnit.assertTrue;
 import static org.testng.AssertJUnit.fail;
@@ -12,6 +13,7 @@ import static org.testng.AssertJUnit.fail;
 
 public class TestUtils {
 
+    private static final String TEST_TEXT = "Big data is a term for data sets that are so large or complex that traditional data processing application software is inadequate to deal with them.";
 
     /**
      * Подготавливает тестовою директорию
@@ -64,9 +66,22 @@ public class TestUtils {
             files.add(f);
             if(!f.exists()){
                 if(!f.createNewFile()) fail("Test file not created");
+                writeTestTextToFile(f);
             }
             assertTrue("Test file not exists",f.exists());
         }
         return files;
+    }
+
+    private static void writeTestTextToFile(File f) throws IOException {
+        try(FileWriter writer = new FileWriter(f, false))
+        {
+           int maxStrings = 100;
+            Random rnd = new Random();
+            rnd.nextInt(maxStrings);
+            for(int i=0;i < maxStrings; i++) writer.write(TEST_TEXT);
+            writer.flush();
+        }
+
     }
 }

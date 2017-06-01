@@ -8,8 +8,8 @@ import java.util.List;
 /**
  *
  */
-public class ActionPackDir  extends AbstractAction{
-    public ActionPackDir(ActionType actionType) {
+public class ActionPack extends AbstractAction{
+    public ActionPack(ActionType actionType) {
         super(actionType);
     }
 

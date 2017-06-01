@@ -87,32 +87,20 @@ public class ActionBuilderTest {
         }
     }
 
-    @Test
-    public void buildPackDir() {
-        try {
-            UpdateAction action = ActionBuilder.build(ActionType.PACK_DIR);
-            if (!(action instanceof ActionPackDir)) org.testng.AssertJUnit.fail("Ожидается ActionPackDir");
 
-            action = ActionBuilder.build(ActionType.PACK_DIR.getTypeName());
-            if (!(action instanceof ActionPackDir)) org.testng.AssertJUnit.fail("Ожидается ActionPackDir");
-
-        } catch (ActionBuilder.UnknownActionError e) {
-            org.testng.AssertJUnit.fail("Ожидается ActionPackDir. Получено исключение ActionBuilder.UnknownActionError");
-        }
-    }
 
     @Test
-    public void buildPackFiles() {
+    public void buildPack() {
         try {
-            UpdateAction action = ActionBuilder.build(ActionType.PACK_FILES);
-            if (!(action instanceof ActionPackFiles)) org.testng.AssertJUnit.fail("Ожидается ActionPackFiles");
+            UpdateAction action = ActionBuilder.build(ActionType.PACK);
+            if (!(action instanceof ActionPack)) org.testng.AssertJUnit.fail("Ожидается ActionPack");
 
-            action = ActionBuilder.build(ActionType.PACK_FILES.getTypeName());
-            if (!(action instanceof ActionPackFiles)) org.testng.AssertJUnit.fail("Ожидается ActionPackFiles");
+            action = ActionBuilder.build(ActionType.PACK.getTypeName());
+            if (!(action instanceof ActionPack)) org.testng.AssertJUnit.fail("Ожидается ActionPack");
 
         } catch (ActionBuilder.UnknownActionError e) {
             org.testng.AssertJUnit.fail(
-                    "Ожидается ActionPackFiles. Получено исключение ActionBuilder.UnknownActionError");
+                    "Ожидается ActionPack. Получено исключение ActionBuilder.UnknownActionError");
         }
     }
 

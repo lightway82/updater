@@ -19,10 +19,7 @@
     <Action type="Unpack">
         <File url=""  dst=""/>
     </Action>
-    <Action type="PackDir">
-        <File  src="" dst=""/>
-    </Action>
-    <Action type="PackFiles">
+    <Action type="Pack">
         <File  src="" dst=""/>
     </Action>
     <Action type="Run">

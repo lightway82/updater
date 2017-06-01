@@ -30,11 +30,8 @@ public class ActionBuilder {
             case MOVE:
                 action = new ActionMove(ActionType.MOVE);
                 break;
-            case PACK_DIR:
-                action = new ActionPackDir(ActionType.PACK_DIR);
-                break;
-            case PACK_FILES:
-                action = new ActionPackFiles(ActionType.PACK_FILES);
+            case PACK:
+                action = new ActionPack(ActionType.PACK);
                 break;
             case RENAME:
                 action = new ActionRename(ActionType.RENAME);
