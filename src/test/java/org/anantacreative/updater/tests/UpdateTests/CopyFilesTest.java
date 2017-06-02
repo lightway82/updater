@@ -1,7 +1,7 @@
 package org.anantacreative.updater.tests.UpdateTests;
 
 import org.anantacreative.updater.Update.UpdateTask;
-import org.anantacreative.updater.tests.TestUtils;
+import org.anantacreative.updater.tests.TestUtil;
 
 import java.io.File;
 import java.util.Collections;
@@ -26,10 +26,10 @@ public class CopyFilesTest extends BaseActionTest {
 
 
         File srcDir = new File(getTestDir(),"src");
-        List<File> files = TestUtils.initDirWithFiles(srcDir, 4, "file", "txt");
+        List<File> files = TestUtil.initDirWithFiles(srcDir, 4, "file", "txt");
 
         File dstDir = new File(getTestDir(),"dst");
-        TestUtils.initDirectory(dstDir, Collections.emptyList());
+        TestUtil.initDirectory(dstDir, Collections.emptyList());
 
 
 

@@ -22,13 +22,13 @@ public class FilesUtilTest {
 
     @BeforeMethod
     public void beforeTests() throws Exception {
-        TestUtils.initTestDir(TEST_DIR);
+        TestUtil.initTestDir(TEST_DIR);
     }
 
     @Test
     public void initDirectoryTest() throws Exception {
         File dir =new File(TEST_DIR,"test");
-        List<File> files = TestUtils.initDirectory(dir, Arrays.asList("file1.txt", "file2.txt"));
+        List<File> files = TestUtil.initDirectory(dir, Arrays.asList("file1.txt", "file2.txt"));
 
         List<String> dirFiles = Stream.of(dir.list()).collect(Collectors.toList());
         assertTrue(dir.exists());
@@ -42,7 +42,7 @@ public class FilesUtilTest {
     @Test
     public void initDirectoryWithFilesTest() throws Exception {
         File dir =new File(TEST_DIR,"test");
-        List<File> files = TestUtils.initDirWithFiles(dir,2,"file","txt");
+        List<File> files = TestUtil.initDirWithFiles(dir,2,"file","txt");
         List<String> dirFiles = Stream.of(dir.list()).collect(Collectors.toList());
         assertTrue(dir.exists());
         assertTrue(dirFiles.size() == files.size());
@@ -57,7 +57,7 @@ public class FilesUtilTest {
     @Test
     public void recursiveDeleteTest() throws Exception {
             File dir = new File(TEST_DIR,"tmp2");
-            TestUtils.initDirWithFiles(dir,4,"file","txt");
+            TestUtil.initDirWithFiles(dir,4,"file","txt");
 
             if(!FilesUtil.recursiveDelete(dir)) fail();
 
@@ -70,7 +70,7 @@ public class FilesUtilTest {
     public void recursiveClearTest() throws Exception {
 
         File dir = new File(TEST_DIR,"tmp2");
-        TestUtils.initDirWithFiles(dir,4,"file","txt");
+        TestUtil.initDirWithFiles(dir,4,"file","txt");
 
         if(!FilesUtil.recursiveClear(dir)) fail();
 
@@ -102,7 +102,7 @@ public class FilesUtilTest {
     @Test
     public void deleteFiles() throws Exception {
         File dir = new File(TEST_DIR,"tmp2");
-        List<File> files = TestUtils.initDirWithFiles(dir, 4, "file", "txt");
+        List<File> files = TestUtil.initDirWithFiles(dir, 4, "file", "txt");
         FilesUtil.deleteFiles(files);
 
         assertTrue("Файлы не удалены",files.stream().filter(file -> file.exists()).count()==0);
@@ -114,10 +114,10 @@ public class FilesUtilTest {
     public void copyFilesToDir() throws Exception {
 
         File srcDir = new File(TEST_DIR,"src");
-        List<File> files = TestUtils.initDirWithFiles(srcDir, 4, "file", "txt");
+        List<File> files = TestUtil.initDirWithFiles(srcDir, 4, "file", "txt");
 
         File dstDir = new File(TEST_DIR,"dst");
-        TestUtils.initDirectory(dstDir, Collections.emptyList());
+        TestUtil.initDirectory(dstDir, Collections.emptyList());
 
         FilesUtil.copyFilesToDir(files, dstDir);
 
@@ -129,10 +129,10 @@ public class FilesUtilTest {
     public void copyDirToDir() throws Exception {
 
         File dstDir = new File(TEST_DIR,"dst");
-        TestUtils.initDirectory(dstDir, Collections.emptyList());
+        TestUtil.initDirectory(dstDir, Collections.emptyList());
 
         File srcDir = new File(TEST_DIR,"src");
-        List<File> files = TestUtils.initDirWithFiles(srcDir, 4, "file", "txt");
+        List<File> files = TestUtil.initDirWithFiles(srcDir, 4, "file", "txt");
 
         FilesUtil.copyDirToDir(srcDir, dstDir);
 
@@ -151,7 +151,7 @@ public class FilesUtilTest {
         Files.createFile(srcFile.toPath());
 
         File dstDir = new File(TEST_DIR,"dst");
-        TestUtils.initDirectory(dstDir,Collections.EMPTY_LIST);
+        TestUtil.initDirectory(dstDir,Collections.EMPTY_LIST);
 
 
         FilesUtil.copyFileToDir(srcFile,dstDir);
@@ -172,5 +172,6 @@ public class FilesUtilTest {
         assertTrue("Файл не скопирован",dstFile.exists());
 
     }
+
 
 }

@@ -14,7 +14,7 @@ import java.util.zip.ZipOutputStream;
 public class ZipUtil {
 
     /**
-     * Запаковать директорию в архив
+     * Запаковать директорию в архив(файлы и директории указанной директории)
      *
      * @param dir     путь к папке
      * @param dstArch путь к файлу нового архива

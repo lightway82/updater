@@ -1,7 +1,7 @@
 package org.anantacreative.updater.tests.UpdateTests;
 
 import org.anantacreative.updater.Update.UpdateTask;
-import org.anantacreative.updater.tests.TestUtils;
+import org.anantacreative.updater.tests.TestUtil;
 
 import java.io.File;
 
@@ -22,7 +22,7 @@ public class DeleteDirsTest extends BaseActionTest {
     @Override
     protected void beforeTest() throws Exception {
 
-        TestUtils.initDirWithFiles(new File(getTestDir(),"tmp2"),4,"test","txt");
+        TestUtil.initDirWithFiles(new File(getTestDir(),"tmp2"),4,"test","txt");
 
 
     }

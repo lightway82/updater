@@ -9,12 +9,12 @@ import java.util.List;
 
 public class Packer {
     /**
-     * Упаковывает директорию в архив
+     * Упаковывает директорию в архив(файлы и директории указанной директории)
      * @param dir  директория для упаковки
      * @param toArch  конечноый архив
      * @throws PackException
      */
-    static void packDir(File dir, File toArch) throws PackException {
+   public static void packDir(File dir, File toArch) throws PackException {
         ZipUtil.zipDir(dir, toArch);
     }
 
@@ -23,7 +23,7 @@ public class Packer {
      * @param files  список файлов
      * @param toArch  конечноый архив
      */
-    static void packFiles(List<File> files, File toArch) throws PackException {
+    public static void packFiles(List<File> files, File toArch) throws PackException {
         ZipUtil.zipFiles(files,toArch);
     }
 }

@@ -4,7 +4,7 @@ import org.anantacreative.updater.FilesUtil;
 import org.anantacreative.updater.Update.AbstractUpdateTaskCreator;
 import org.anantacreative.updater.Update.UpdateTask;
 import org.anantacreative.updater.Update.XML.XmlUpdateTaskCreator;
-import org.anantacreative.updater.tests.TestUtils;
+import org.anantacreative.updater.tests.TestUtil;
 import org.anantacreative.updater.tests.server.TestingUpdateServer;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -70,7 +70,7 @@ protected static class Value<T>{
     @BeforeMethod
     public void clearing() throws Exception {
 
-        TestUtils.initTestDir(TEST_DIR);
+        TestUtil.initTestDir(TEST_DIR);
         File dirDownloading = new File("./downloading");
         if(dirDownloading.exists())  assertTrue(FilesUtil.recursiveDelete(dirDownloading));
         else dirDownloading.mkdir();
