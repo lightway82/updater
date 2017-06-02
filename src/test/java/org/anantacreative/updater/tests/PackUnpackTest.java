@@ -24,6 +24,9 @@ public class PackUnpackTest {
         File testDir = TestUtil.initTestDir("./tmp");
         File dir = new File(testDir, "dst");
         List<File> files = TestUtil.initDirWithFiles(dir, 10, "file", "txt");
+        File dir2 = new File(dir, "dst2");
+        List<File> files2 = TestUtil.initDirWithFiles(dir2, 5, "fff", "txt");
+
         File arch = new File(testDir, "pack_dir.zip");
 
         Packer.packDir(dir, arch);
@@ -33,14 +36,12 @@ public class PackUnpackTest {
 
         File unpackFilesDir = new File(testDir,"unpacked_files");
         UnPacker.unPack(arch, unpackFilesDir);
-        checkUnPackPackedDirArch(unpackFilesDir,files.stream().map(File::getName).collect(Collectors.toList()));
-
-
+        TestUtil.hasFilesInDirExectly(unpackFilesDir,files.stream().map(File::getName).collect(Collectors.toList()),true);
+        File dst2 = TestUtil.hasDirsInDirExectly(unpackFilesDir, Arrays.asList(dir2.getName()))[0];
+        TestUtil.hasFilesInDirExectly(dst2,files2.stream().map(File::getName).collect(Collectors.toList()),true);
     }
 
-    private void checkUnPackPackedDirArch(File unpackFilesDir, List<String> files) {
-        TestUtil.hasFilesInDirExectly(unpackFilesDir,files,true);
-    }
+
 
 
     @Test(dependsOnMethods = {"unPack"})
@@ -79,8 +80,8 @@ public class PackUnpackTest {
 
         File[] files = TestUtil.hasDirsInDirExectly(unpackFilesDir, Arrays.asList("dst1", "dst2"));
 
-        File dst1 = files[0].equals("dst1")? files[0] : files[1];
-        File dst2 = files[0].equals("dst2")? files[0] : files[1];
+        File dst1 = files[0].getName().equals("dst1")? files[0] : files[1];
+        File dst2 = files[0].getName().equals("dst2")? files[0] : files[1];
 
         File dst3 = TestUtil.hasDirsInDirExectly(dst2, Arrays.asList("dst3"))[0];
 
@@ -115,7 +116,7 @@ public class PackUnpackTest {
      * Архив содержит несколько вложенных директорий с файлами по 5 шт. в директоии, все файлы не нулевой длины и с одинаковым содержимым.
      * @param toUnpackDir папка распаковки
      */
-    private void checkUnPackTestArch(File toUnpackDir){
+    public static void checkUnPackTestArch(File toUnpackDir){
         List<String> nameFiles = Arrays.asList("file1.txt", "file2.txt", "file3.txt", "file4.txt", "file5.txt");
         File dir = TestUtil.hasDirsInDirExectly(toUnpackDir, Arrays.asList("dir"))[0];
         File dir2 = TestUtil.hasDirsInDirExectly(dir, Arrays.asList("dir2"))[0];

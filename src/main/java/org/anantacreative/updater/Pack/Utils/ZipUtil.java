@@ -16,7 +16,7 @@ public class ZipUtil {
     /**
      * Запаковать директорию в архив(файлы и директории указанной директории)
      *
-     * @param dir     путь к папке
+     * @param dir     путь к папке, содержимое которой упаковывается
      * @param dstArch путь к файлу нового архива
      */
     public static void zipDir(File dir, File dstArch) throws PackException {
@@ -24,7 +24,7 @@ public class ZipUtil {
 
         try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(dstArch))) {
 
-            doZipDir(dir, out);
+            doZipDir(dir, dir.getPath(), out);
 
         } catch (Exception e) {
             throw new PackException(e);
@@ -33,6 +33,13 @@ public class ZipUtil {
 
     }
 
+    /**
+     * * Файлы и директории в списке должны быть из одной директории иначе при распаковке будут лишние пути
+     * Также устроен обычный архиватор, он отказывается паковать файлы из разных директорий
+     * @param files список файлов и директорий из одной общей директории!!!!
+     * @param arch конечный архив
+     * @throws PackException
+     */
     public static void zipFiles(List<File> files, File arch) throws PackException {
         try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(arch))) {
 
@@ -52,7 +59,7 @@ public class ZipUtil {
     public static void zipFile(File f, File arch) throws PackException {
         try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(arch))) {
 
-            doZipFile(f,out);
+            doZipFile(f,f.getParentFile().getPath(), out);
 
         } catch (Exception e) {
             throw new PackException(e);
@@ -112,26 +119,46 @@ public class ZipUtil {
 
     }
 
-
+    /**
+     * Файлы и директории в списке должны быть из одной директории иначе при распаковке будут лишние пути
+     * Также устроен обычный архиватор, он отказывается паковать файлы из разных директорий
+     * @param files
+     * @param out
+     * @throws IOException
+     */
     private static void doZipFiles(List<File> files, ZipOutputStream out) throws IOException {
         for (File file : files) {
-            if (file.isDirectory()) doZipDir(file, out);
-            else doZipFile(file,out);
+            if (file.isDirectory()) doZipDir(file, file.getParentFile().getPath(), out);
+            else doZipFile(file,file.getParentFile().getPath(),out);
         }
 
     }
 
-    private static void doZipDir(File dir, ZipOutputStream out) throws IOException {
+    private static void doZipDir(File dir, String commonPath, ZipOutputStream out) throws IOException {
         for (File f : dir.listFiles()) {
-            if (f.isDirectory()) doZipDir(f, out);
-            else doZipFile(f,out);
+            if (f.isDirectory()) doZipDir(f,commonPath, out);
+            else doZipFile(f,commonPath, out);
         }
     }
 
 
-    private static void doZipFile(File f, ZipOutputStream out) throws IOException {
-        out.putNextEntry(new ZipEntry(f.getPath()));
+    private static void doZipFile(File f, String commonPath, ZipOutputStream out) throws IOException {
+        String entryName  = cutEntryNameFromFilePath(f,commonPath );
+        out.putNextEntry(new ZipEntry(entryName));
         writeZip(f, out);
+    }
+
+
+    private static String cutEntryNameFromFilePath(File f,String commonPath ){
+        String entryName;
+        String fPath =f.getPath();
+        if(fPath.contains(commonPath)){
+            int startIndex = fPath.indexOf(commonPath)+commonPath.length()+1;
+            if(startIndex >= fPath.length()) entryName = fPath;
+            else entryName = fPath.substring(startIndex);
+        }else entryName = fPath;
+
+        return entryName;
     }
 
     private static void writeZip(File f, OutputStream out) throws IOException {
