@@ -34,7 +34,7 @@ public class ExtendedDownloader  extends Observable implements Runnable
   public static final int COMPLETE = 2;
   public static final int CANCELLED = 3;
   public static final int ERROR = 4;
-   public static final int BREAKINGLINK = 5;
+  public static final int BREAKINGLINK = 5;
  
 
   private URL url; // download URL
