@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 <Update date="16.05.2017">
-    <Action type="CopyDir">
+    <Action type="CopyDirs">
         <File src="./tmp/src" dst="./tmp/dst"/>
     </Action>
 </Update>

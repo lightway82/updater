@@ -34,7 +34,7 @@ public class ActionBuilder {
                 action = new ActionPackFiles(ActionType.PACK_FILES);
                 break;
             case PACK_DIRS:
-                action = new ActionPackFiles(ActionType.PACK_DIRS);
+                action = new ActionPackDirs(ActionType.PACK_DIRS);
                 break;
             case RENAME:
                 action = new ActionRename(ActionType.RENAME);

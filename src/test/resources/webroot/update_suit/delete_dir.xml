@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 <Update date="16.05.2017">
-    <Action type="DeleteDir">
+    <Action type="DeleteDirs">
         <File src="./tmp/tmp2"/>
     </Action>
 </Update>
