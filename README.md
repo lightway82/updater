@@ -7,3 +7,25 @@ Framework для создания автоматических обновлен�
 Framework for creating automatic updates in java-applications.
 Implemented the update process through xml-files. You can create your own update strategies based on it.
 **Not yet completed!**
+
+How to include updater to project:
+Add to pom.xml: 
+
+<repositories>
+        <repository>
+            <id>updater_repo</id>
+            <url>https://raw.github.com/lightway82/updater_repo/mvn-repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.anantacreative</groupId>
+            <artifactId>updater</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>

@@ -6,24 +6,60 @@
 
     <groupId>org.anantacreative</groupId>
     <artifactId>updater</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.9</version>
     <packaging>jar</packaging>
 
-    <name>BiomedisMAir3</name>
+    <name>Updater</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>org.anantacreative.updater.Example</mainClass>
         <java-version>1.8</java-version>
-        <programmVersionMajor>1</programmVersionMajor>
-        <programmVersionMinor>0</programmVersionMinor>
+        <programmVersionMajor>0</programmVersionMajor>
+        <programmVersionMinor>9</programmVersionMinor>
         <log4j.version>2.5</log4j.version>
-
+        <github.global.server>github</github.global.server>
     </properties>
-
+    <distributionManagement>
+        <repository>
+            <id>internal.repo</id>
+            <name>Temporary Staging Repository</name>
+            <url>file://${basedir}/mvn-repo</url>
+        </repository>
+    </distributionManagement>
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+                <configuration>
+                    <skip>false</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.12</version>
+                <configuration>
+                    <message>Maven artifacts for ${project.version}</message>
+                    <noJekyll>true</noJekyll>
+                    <outputDirectory>${basedir}/mvn-repo</outputDirectory>
+                    <branch>refs/heads/mvn-repo</branch>
+                    <includes><include>**/*</include></includes>
+                    <repositoryName>updater_repo</repositoryName>
+                    <repositoryOwner>lightway82</repositoryOwner>
 
+                    <server>${github.global.server}</server>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
