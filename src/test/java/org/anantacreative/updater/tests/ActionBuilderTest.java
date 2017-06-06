@@ -9,9 +9,10 @@ import org.testng.annotations.Test;
 /**
  *
  */
+@Test(groups = {"common"})
 public class ActionBuilderTest {
 
-    @Test
+
     public void buildCopyDir() {
 
         try {
@@ -28,7 +29,7 @@ public class ActionBuilderTest {
 
 
 
-    @Test
+
     public void buildCopyFiles() {
         try {
             UpdateAction action = ActionBuilder.build(ActionType.COPY_FILES);
@@ -43,7 +44,7 @@ public class ActionBuilderTest {
         }
     }
 
-    @Test
+
     public void buildMove() {
         try {
             UpdateAction action = ActionBuilder.build(ActionType.MOVE);
@@ -57,7 +58,7 @@ public class ActionBuilderTest {
         }
     }
 
-    @Test
+
     public void buildDeleteFiles() {
         try {
             UpdateAction action = ActionBuilder.build(ActionType.DELETE_FILES);
@@ -72,7 +73,7 @@ public class ActionBuilderTest {
         }
     }
 
-    @Test
+
     public void buildDeleteDir() {
         try {
             UpdateAction action = ActionBuilder.build(ActionType.DELETE_DIRS);
@@ -89,7 +90,7 @@ public class ActionBuilderTest {
 
 
 
-    @Test
+
     public void buildPackFiles() {
         try {
             UpdateAction action = ActionBuilder.build(ActionType.PACK_FILES);
@@ -103,7 +104,7 @@ public class ActionBuilderTest {
                     "Ожидается ActionPackFiles. Получено исключение ActionBuilder.UnknownActionError");
         }
     }
-    @Test
+
     public void buildPackDirs() {
         try {
             UpdateAction action = ActionBuilder.build(ActionType.PACK_DIRS);
@@ -117,7 +118,7 @@ public class ActionBuilderTest {
                     "Ожидается ActionPackDirs. Получено исключение ActionBuilder.UnknownActionError");
         }
     }
-    @Test
+
     public void buildRename() {
         try {
             UpdateAction action = ActionBuilder.build(ActionType.RENAME);
@@ -131,7 +132,7 @@ public class ActionBuilderTest {
         }
     }
 
-    @Test
+
     public void buildRun() {
         try {
             UpdateAction action = ActionBuilder.build(ActionType.RUN);
@@ -146,7 +147,7 @@ public class ActionBuilderTest {
     }
 
 
-    @Test
+
     public void buildUnpack() {
         try {
             UpdateAction action = ActionBuilder.build(ActionType.UNPACK);
@@ -160,7 +161,7 @@ public class ActionBuilderTest {
         }
     }
 
-    @Test
+
     public void buildUnknown() {
 
         try {

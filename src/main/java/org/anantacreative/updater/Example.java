@@ -18,50 +18,6 @@ public class Example {
 
 
     public static void main(String[] args){
-        /*
-        DownloadingTask dt=new DownloadingTask(new DownloadingTask.TaskCompleteListener() {
-            @Override
-            public void complete() {
-                System.out.println("Все скачано");
-            }
-
-            @Override
-            public void error(String msg) {
-                System.out.println("Ошибка: "+msg);
-            }
-
-            @Override
-            public void completeFile(String url, File path) {
-                System.out.println("Файл закачан!");
-            }
-
-            @Override
-            public void currentFileProgress(float progress) {
-                progressPercentage((int)progress,100);
-
-            }
-
-            @Override
-            public void canceled() {
-                System.out.println("Отменено пользователем");
-            }
-
-            @Override
-            public void nextFileStartDownloading(String url, File path) {
-                System.out.println("Скачивается файл: "+ url+" путь: "+path.getAbsolutePath());
-            }
-        });
-        try {
-            dt.addItem(new URL("http://www.biomedis.ru/doc/bazovie_kompleksi/bazoviy_kompleks_utro.zip"),new File("./downloads/f1.zip"));
-            dt.addItem(new URL("http://www.biomedis.ru/doc/bazovie_kompleksi/bazoviy_kompleks_gerpes.zip"),new File("./downloads/f2.zip"));
-            dt.addItem(new URL("http://www.biomedis.ru/doc/bazovie_kompleksi/bazoviy_kompleks_prostatit.zip"),new File("./downloads/f3.zip"));
-            dt.addItem(new URL("http://www.biomedis.ru/doc/bazovie_kompleksi/bazoviy_kompleks_gipoglikemia.zip"),new File("./downloads/f4.zip"));
-
-            dt.download(false);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-*/
 
         Version curVersion=new Version(1,0,0);
         XmlUpdateTaskCreator taskCreator;

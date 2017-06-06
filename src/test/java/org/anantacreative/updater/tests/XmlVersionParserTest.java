@@ -16,13 +16,14 @@ import static org.testng.AssertJUnit.fail;
 /**
  *
  */
+
 public class XmlVersionParserTest {
     @BeforeClass
     public void init(){
         TestingUpdateServer.startServer();
     }
 
-    @Test
+    @Test(groups = {"common"})
     public void versionCheck(){
         Version v1=new Version(1,2,3);
         Version v2=new Version(1,2,3);
@@ -33,7 +34,7 @@ public class XmlVersionParserTest {
     }
 
 
-    @Test(dependsOnMethods = "versionCheck")
+    @Test(dependsOnMethods = "versionCheck",groups = {"common"})
     public void parseCheck(){
         try {
 

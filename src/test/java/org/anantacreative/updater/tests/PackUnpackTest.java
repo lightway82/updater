@@ -18,7 +18,7 @@ import static org.testng.AssertJUnit.assertTrue;
 public class PackUnpackTest {
 
 
-    @Test(dependsOnMethods = {"unPack"})
+    @Test(dependsOnMethods = {"unPack"},groups = {"common"})
     public void packDir() throws Exception {
 
         File testDir = TestUtil.initTestDir("./tmp");
@@ -44,7 +44,7 @@ public class PackUnpackTest {
 
 
 
-    @Test(dependsOnMethods = {"unPack"})
+    @Test(dependsOnMethods = {"unPack"},groups = {"common"})
     public void packFiles() throws Exception {
 
         File testDir = TestUtil.initTestDir("./tmp");
@@ -102,7 +102,7 @@ public class PackUnpackTest {
      * Проверяется распаковка заранее приготовленного архива. Архив берется из ресурсов тестов.
      * После прохождения этого теста можно использовать распаковку в тесте с упаковкой файлов для проверки результата
      */
-    @Test
+    @Test(groups = {"common"})
     public void unPack() throws Exception {
         File testDir = TestUtil.initTestDir("./tmp");
         File zipArch = ResourceUtil.saveResource(testDir, "test.zip", "/test.zip", true);

@@ -81,7 +81,7 @@ protected static class Value<T>{
 
 
 
-        @Test
+    @Test(groups = {"updates"})
     public  void test() throws Exception {
         String updateXml = getUpdateXmlName();
         Value<UpdateTask> updateTaskValue = new Value<>();

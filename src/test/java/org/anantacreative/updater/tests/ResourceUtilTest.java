@@ -7,11 +7,11 @@ import org.testng.annotations.Test;
 import java.io.File;
 
 import static org.testng.AssertJUnit.assertTrue;
-
+@Test(groups = {"common"})
 public class ResourceUtilTest {
 
 
-    @Test
+
     public void testSaveResource() throws Exception {
         File dir =   TestUtil.initTestDir("./tmp");
         File file = ResourceUtil.saveResource(dir, "res.zip","/test.zip",false);
@@ -20,7 +20,7 @@ public class ResourceUtilTest {
 
     }
 
-    @Test
+
     public void testSaveResource1() throws Exception {
         File dir =   TestUtil.initTestDir("./tmp");
         File file = ResourceUtil.saveResource(dir.getPath(), "res.zip","/test.zip",true);

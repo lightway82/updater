@@ -14,12 +14,13 @@ import static org.testng.AssertJUnit.fail;
 /**
  *
  */
+@Test(groups = {"common"})
 public class DownloadingTaskTest {
     @BeforeClass
     public void init(){
         TestingUpdateServer.startServer();
     }
-    @Test
+
     public void downloadingCheck(){
         DownloadingTask dt=new DownloadingTask(new DownloadingTask.TaskCompleteListener() {
             @Override

@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import static org.testng.AssertJUnit.assertTrue;
 import static org.testng.AssertJUnit.fail;
 
-
+@Test(groups = {"common"})
 public class FilesUtilTest {
     private static File TEST_DIR = new File("./tmp");
 
@@ -25,7 +25,7 @@ public class FilesUtilTest {
         TestUtil.initTestDir(TEST_DIR);
     }
 
-    @Test
+
     public void initDirectoryTest() throws Exception {
         File dir =new File(TEST_DIR,"test");
         List<File> files = TestUtil.initDirectory(dir, Arrays.asList("file1.txt", "file2.txt"));
@@ -39,7 +39,7 @@ public class FilesUtilTest {
 
     }
 
-    @Test
+
     public void initDirectoryWithFilesTest() throws Exception {
         File dir =new File(TEST_DIR,"test");
         List<File> files = TestUtil.initDirWithFiles(dir,2,"file","txt");
@@ -54,7 +54,7 @@ public class FilesUtilTest {
 
 
 
-    @Test
+
     public void recursiveDeleteTest() throws Exception {
             File dir = new File(TEST_DIR,"tmp2");
             TestUtil.initDirWithFiles(dir,4,"file","txt");
@@ -66,7 +66,7 @@ public class FilesUtilTest {
 
     }
 
-    @Test
+
     public void recursiveClearTest() throws Exception {
 
         File dir = new File(TEST_DIR,"tmp2");
@@ -79,7 +79,7 @@ public class FilesUtilTest {
 
     }
 
-    @Test
+
     public void checkFileOrDirectory() throws Exception {
 
         File dir=TEST_DIR;
@@ -99,7 +99,7 @@ public class FilesUtilTest {
 
     }
 
-    @Test
+
     public void deleteFiles() throws Exception {
         File dir = new File(TEST_DIR,"tmp2");
         List<File> files = TestUtil.initDirWithFiles(dir, 4, "file", "txt");
@@ -110,7 +110,7 @@ public class FilesUtilTest {
     }
 
 
-    @Test
+
     public void copyFilesToDir() throws Exception {
 
         File srcDir = new File(TEST_DIR,"src");
@@ -125,7 +125,7 @@ public class FilesUtilTest {
 
     }
 
-    @Test
+
     public void copyDirToDir() throws Exception {
 
         File dstDir = new File(TEST_DIR,"dst");
@@ -145,7 +145,7 @@ public class FilesUtilTest {
     }
 
 
-    @Test
+
     public void copyFileToDir() throws Exception {
         File srcFile = new File(TEST_DIR,"test.txt");
         Files.createFile(srcFile.toPath());
@@ -161,7 +161,7 @@ public class FilesUtilTest {
 
 
     }
-    @Test
+
     public void copyFileToFile() throws Exception {
 
         File srcFile = new File(TEST_DIR,"test.txt");

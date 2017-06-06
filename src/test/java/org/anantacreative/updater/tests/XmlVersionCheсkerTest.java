@@ -16,6 +16,7 @@ import static org.testng.AssertJUnit.fail;
 /**
  *
  */
+@Test(groups = {"common"})
 public class XmlVersionCheсkerTest {
     @BeforeClass
     public void init(){
@@ -23,7 +24,7 @@ public class XmlVersionCheсkerTest {
     }
 
 
-    @Test
+
     public void checkTest(){
         try {
             Version version = new Version(1, 2, 3);
