@@ -12,7 +12,7 @@ import java.io.File;
 public abstract class AbstractAction implements UpdateAction {
     private ActionType actionType;
 
-    public AbstractAction(ActionType actionType) {
+    protected AbstractAction(ActionType actionType) {
         this.actionType = actionType;
     }
 

@@ -18,7 +18,7 @@ import java.util.Map;
  * Упаковываются директории с содержимым! Для упаковки только содержимого директорий используйте ActionPackDirs
  */
 public class ActionPackFiles extends AbstractAction {
-    public ActionPackFiles(ActionType actionType) {
+    protected ActionPackFiles(ActionType actionType) {
         super(actionType);
     }
 

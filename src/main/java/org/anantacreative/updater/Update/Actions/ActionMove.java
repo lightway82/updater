@@ -16,7 +16,7 @@ import java.util.List;
  * Также перемещение закачаных файлов указанных в URL в dst, при этом src игнорируется
  */
 public class ActionMove  extends AbstractAction {
-    public ActionMove(ActionType actionType) {
+    protected ActionMove(ActionType actionType) {
         super(actionType);
     }
 

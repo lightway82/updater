@@ -14,7 +14,7 @@ import java.util.List;
  *  Можно переименовывать директории
  */
 public class ActionRename  extends AbstractAction {
-    public ActionRename(ActionType actionType) {
+    protected ActionRename(ActionType actionType) {
         super(actionType);
     }
 

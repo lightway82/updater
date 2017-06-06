@@ -12,7 +12,7 @@ import java.util.List;
  * Распаковка архивов из src в dst директории
  */
 public class ActionUnpack  extends AbstractAction {
-    public ActionUnpack(ActionType actionType) {
+    protected ActionUnpack(ActionType actionType) {
         super(actionType);
     }
 

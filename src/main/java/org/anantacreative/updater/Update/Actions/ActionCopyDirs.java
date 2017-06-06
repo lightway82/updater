@@ -11,7 +11,7 @@ import java.util.List;
  * Копировать директорию внутрь указанной директории
  */
 public class ActionCopyDirs extends AbstractAction {
-    public ActionCopyDirs(ActionType actionType) {
+    protected ActionCopyDirs(ActionType actionType) {
         super(actionType);
     }
 

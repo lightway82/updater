@@ -11,7 +11,7 @@ import java.util.List;
  * Копирование файлов в директории или в файлы
  */
 public class ActionCopyFiles  extends AbstractAction {
-    public ActionCopyFiles(ActionType actionType) {
+    protected ActionCopyFiles(ActionType actionType) {
         super(actionType);
     }
 

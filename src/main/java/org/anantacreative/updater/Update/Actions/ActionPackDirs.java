@@ -11,7 +11,7 @@ import java.util.List;
  *Упаковывает СОДЕРЖИМОЕ директорий src, каждую в свой архив dst.
  */
 public class ActionPackDirs extends AbstractAction {
-    public ActionPackDirs(ActionType actionType) {
+    protected ActionPackDirs(ActionType actionType) {
         super(actionType);
     }
 

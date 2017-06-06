@@ -11,7 +11,7 @@ import java.util.List;
  * Удаление директории
  */
 public class ActionDeleteDirs extends AbstractAction {
-    public ActionDeleteDirs(ActionType actionType) {
+    protected ActionDeleteDirs(ActionType actionType) {
         super(actionType);
     }
 

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  *Удаление списка файлов
  */
 public class ActionDeleteFiles  extends AbstractAction {
-    public ActionDeleteFiles(ActionType actionType) {
+    protected ActionDeleteFiles(ActionType actionType) {
         super(actionType);
     }
 
