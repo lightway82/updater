@@ -15,14 +15,14 @@ public class ActionBuilderTest {
     public void buildCopyDir() {
 
         try {
-            UpdateAction action = ActionBuilder.build(ActionType.COPY_DIR);
-            if (!(action instanceof ActionCopyDir)) org.testng.AssertJUnit.fail("Ожидается ActionCopyDir");
+            UpdateAction action = ActionBuilder.build(ActionType.COPY_DIRS);
+            if (!(action instanceof ActionCopyDirs)) org.testng.AssertJUnit.fail("Ожидается ActionCopyDirs");
 
-            action = ActionBuilder.build(ActionType.COPY_DIR.getTypeName());
-            if (!(action instanceof ActionCopyDir)) org.testng.AssertJUnit.fail("Ожидается ActionCopyDir");
+            action = ActionBuilder.build(ActionType.COPY_DIRS.getTypeName());
+            if (!(action instanceof ActionCopyDirs)) org.testng.AssertJUnit.fail("Ожидается ActionCopyDirs");
 
         } catch (ActionBuilder.UnknownActionError e) {
-            org.testng.AssertJUnit.fail("Ожидается ActionCopyDir. Получено исключение ActionBuilder.UnknownActionError");
+            org.testng.AssertJUnit.fail("Ожидается ActionCopyDirs. Получено исключение ActionBuilder.UnknownActionError");
         }
     }
 
@@ -75,35 +75,48 @@ public class ActionBuilderTest {
     @Test
     public void buildDeleteDir() {
         try {
-            UpdateAction action = ActionBuilder.build(ActionType.DELETE_DIR);
-            if (!(action instanceof ActionDeleteDir)) org.testng.AssertJUnit.fail("Ожидается ActionDeleteDir");
+            UpdateAction action = ActionBuilder.build(ActionType.DELETE_DIRS);
+            if (!(action instanceof ActionDeleteDirs)) org.testng.AssertJUnit.fail("Ожидается ActionDeleteDirs");
 
-            action = ActionBuilder.build(ActionType.DELETE_DIR.getTypeName());
-            if (!(action instanceof ActionDeleteDir)) org.testng.AssertJUnit.fail("Ожидается ActionDeleteDir");
+            action = ActionBuilder.build(ActionType.DELETE_DIRS.getTypeName());
+            if (!(action instanceof ActionDeleteDirs)) org.testng.AssertJUnit.fail("Ожидается ActionDeleteDirs");
 
         } catch (ActionBuilder.UnknownActionError e) {
             org.testng.AssertJUnit.fail(
-                    "Ожидается ActionDeleteDir. Получено исключение ActionBuilder.UnknownActionError");
+                    "Ожидается ActionDeleteDirs. Получено исключение ActionBuilder.UnknownActionError");
         }
     }
 
 
 
     @Test
-    public void buildPack() {
+    public void buildPackFiles() {
         try {
-            UpdateAction action = ActionBuilder.build(ActionType.PACK);
-            if (!(action instanceof ActionPack)) org.testng.AssertJUnit.fail("Ожидается ActionPack");
+            UpdateAction action = ActionBuilder.build(ActionType.PACK_FILES);
+            if (!(action instanceof ActionPackFiles)) org.testng.AssertJUnit.fail("Ожидается ActionPackFiles");
 
-            action = ActionBuilder.build(ActionType.PACK.getTypeName());
-            if (!(action instanceof ActionPack)) org.testng.AssertJUnit.fail("Ожидается ActionPack");
+            action = ActionBuilder.build(ActionType.PACK_FILES.getTypeName());
+            if (!(action instanceof ActionPackFiles)) org.testng.AssertJUnit.fail("Ожидается ActionPackFiles");
 
         } catch (ActionBuilder.UnknownActionError e) {
             org.testng.AssertJUnit.fail(
-                    "Ожидается ActionPack. Получено исключение ActionBuilder.UnknownActionError");
+                    "Ожидается ActionPackFiles. Получено исключение ActionBuilder.UnknownActionError");
         }
     }
+    @Test
+    public void buildPackDirs() {
+        try {
+            UpdateAction action = ActionBuilder.build(ActionType.PACK_DIRS);
+            if (!(action instanceof ActionPackDirs)) org.testng.AssertJUnit.fail("Ожидается ActionPackDirs");
 
+            action = ActionBuilder.build(ActionType.PACK_DIRS.getTypeName());
+            if (!(action instanceof ActionPackDirs)) org.testng.AssertJUnit.fail("Ожидается ActionPackDirs");
+
+        } catch (ActionBuilder.UnknownActionError e) {
+            org.testng.AssertJUnit.fail(
+                    "Ожидается ActionPackDirs. Получено исключение ActionBuilder.UnknownActionError");
+        }
+    }
     @Test
     public void buildRename() {
         try {

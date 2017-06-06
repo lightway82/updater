@@ -48,17 +48,19 @@ public class PackUnpackTest {
     public void packFiles() throws Exception {
 
         File testDir = TestUtil.initTestDir("./tmp");
-        File dir1 = new File(testDir, "dst1");
-        File dir2 = new File(testDir, "dst2");
+        File toPackDir =new File(testDir,"to_pack");
+        TestUtil.initDirectory(toPackDir, Collections.EMPTY_LIST);
+        File dir1 = new File(toPackDir, "dst1");
+        File dir2 = new File(toPackDir, "dst2");
         List<File> files1 = TestUtil.initDirWithFiles(dir1, 10, "file", "txt");
         List<File> files2 = TestUtil.initDirWithFiles(dir2, 5, "f", "txt");
         File dir3 = new File(dir2, "dst3");
         List<File> files3 = TestUtil.initDirWithFiles(dir3, 20, "fff", "txt");
 
-        File file1 = new File(testDir, "file1.txt");
+        File file1 = new File(toPackDir, "file1.txt");
         TestUtil.createFile(file1);
 
-        File file2 = new File(testDir, "file2.txt");
+        File file2 = new File(toPackDir, "file2.txt");
         TestUtil.createFile(file2);
 
         List<File> toPackFiles = new ArrayList<>();
@@ -74,8 +76,9 @@ public class PackUnpackTest {
         assertTrue(arch.exists());
         assertTrue(arch.length() > 0);
 
+        File archToUnpack = new File(testDir, "pack_files.zip");
         File unpackFilesDir = new File(testDir,"unpacked_files");
-        UnPacker.unPack(arch, unpackFilesDir);
+        UnPacker.unPack(archToUnpack, unpackFilesDir);
 
 
         File[] files = TestUtil.hasDirsInDirExectly(unpackFilesDir, Arrays.asList("dst1", "dst2"));

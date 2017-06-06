@@ -3,7 +3,10 @@ package org.anantacreative.updater.Update;
 import java.io.File;
 import java.net.URL;
 
-
+/**
+ * Представляет элемент файла для Action. Может представлять файл src на диске или на сервере через URL и dst путь для результата операции.
+ * Конкретное назначение праметров определется конкретным Action
+ */
 public class UpdateActionFileItem {
     private File srcPath;
     private File dstPath;
@@ -26,6 +29,7 @@ public class UpdateActionFileItem {
 
     /**
      * Устанавливает путь на диске к загруженному файлу, который был указан в URL
+     * При создания собственной стратегии обновления, после загрузки файла необходимо использовать этот метод для указания расположения загруженного файла
      * @param downloadedFile
      */
     public void setDownloadedFile(File downloadedFile) {
@@ -56,16 +60,34 @@ public class UpdateActionFileItem {
         private File dstPath;
         private URL url;
 
-        public Builder setSrcPath(File src) {
-            srcPath = src;
+        /**
+         * Устанавливает путь к исходным данным src. Путь указываетя от корневой директории приложения.
+         * Корневая директория приложения указывается  при создании UpdateTaskCreator
+         * @param src путь от корневой директории приложения
+         * @param rootDirApp корневая директория приложения
+         * @return
+         */
+        public Builder setSrcPath(String src, File rootDirApp) {
+            srcPath = new File(rootDirApp, src.replace("./",""));
+            return this;
+        }
+        /**
+         * Устанавливает путь к исходным данным dst. Путь указываетя от корневой директории приложения.
+         * Корневая директория приложения указывается  при создании UpdateTaskCreator
+         * @param dst путь от корневой директории приложения
+         * @param rootDirApp корневая директория приложения
+         * @return
+         */
+        public Builder setDstPath(String dst, File rootDirApp) {
+            dstPath = new File(rootDirApp, dst.replace("./",""));
             return this;
         }
 
-        public Builder setDstPath(File dst) {
-            dstPath = dst;
-            return this;
-        }
-
+        /**
+         * URL с которого будет загружаться файл, перед проведением Action
+         * @param url
+         * @return
+         */
         public Builder setURL(URL url) {
             this.url = url;
             return this;

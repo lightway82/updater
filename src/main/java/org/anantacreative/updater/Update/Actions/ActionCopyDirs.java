@@ -10,8 +10,8 @@ import java.util.List;
 /**
  * Копировать директорию внутрь указанной директории
  */
-public class ActionCopyDir extends AbstractAction {
-    public ActionCopyDir(ActionType actionType) {
+public class ActionCopyDirs extends AbstractAction {
+    public ActionCopyDirs(ActionType actionType) {
         super(actionType);
     }
 

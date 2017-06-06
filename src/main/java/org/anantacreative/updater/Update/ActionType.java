@@ -7,13 +7,14 @@ public enum ActionType {
 
     MOVE("Move"),
     RENAME("Rename"),
-    DELETE_DIR("DeleteDir"),
+    DELETE_DIRS("DeleteDirs"),
     DELETE_FILES("DeleteFiles"),
-    UNPACK("UnPack"),
-    PACK("Pack"),
+    UNPACK("Unpack"),
+    PACK_FILES("PackFiles"),
+    PACK_DIRS("PackDirs"),
     RUN("Run"),
     COPY_FILES("CopyFiles"),
-    COPY_DIR("CopyDir"),
+    COPY_DIRS("CopyDirs"),
     UNKNOWN("");
 
     private String typeName;

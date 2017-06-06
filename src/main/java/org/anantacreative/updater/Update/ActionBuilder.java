@@ -15,14 +15,14 @@ public class ActionBuilder {
         if (type == ActionType.UNKNOWN) throw new UnknownActionError();
         UpdateAction action;
         switch (type) {
-            case COPY_DIR:
-                action = new ActionCopyDir(ActionType.COPY_DIR);
+            case COPY_DIRS:
+                action = new ActionCopyDirs(ActionType.COPY_DIRS);
                 break;
             case COPY_FILES:
                 action = new ActionCopyFiles(ActionType.COPY_FILES);
                 break;
-            case DELETE_DIR:
-                action = new ActionDeleteDir(ActionType.DELETE_DIR);
+            case DELETE_DIRS:
+                action = new ActionDeleteDirs(ActionType.DELETE_DIRS);
                 break;
             case DELETE_FILES:
                 action = new ActionDeleteFiles(ActionType.DELETE_FILES);
@@ -30,8 +30,11 @@ public class ActionBuilder {
             case MOVE:
                 action = new ActionMove(ActionType.MOVE);
                 break;
-            case PACK:
-                action = new ActionPack(ActionType.PACK);
+            case PACK_FILES:
+                action = new ActionPackFiles(ActionType.PACK_FILES);
+                break;
+            case PACK_DIRS:
+                action = new ActionPackFiles(ActionType.PACK_DIRS);
                 break;
             case RENAME:
                 action = new ActionRename(ActionType.RENAME);

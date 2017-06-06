@@ -77,10 +77,10 @@ public class XmlUpdateFileHandler extends DefaultHandler {
             }
 
             if (src != null) {
-                if (!src.isEmpty()) builder.setSrcPath(new File(rootDirApp, src));
+                if (!src.isEmpty()) builder.setSrcPath(src,rootDirApp);
             }
             if (dst != null) {
-                if (!dst.isEmpty()) builder.setDstPath(new File(rootDirApp, dst));
+                if (!dst.isEmpty()) builder.setDstPath( dst,rootDirApp);
             }
             currentUpdateTaskItem.addFileItem(builder.build());
         }

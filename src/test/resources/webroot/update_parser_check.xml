@@ -10,7 +10,7 @@
     <Action type="MoveIn">
         <File  src="" dst=""/>
     </Action>
-    <Action type="DeleteDir">
+    <Action type="DeleteDirs">
         <File  src="" />
     </Action>
     <Action type="DeleteFiles">
@@ -19,7 +19,10 @@
     <Action type="Unpack">
         <File url=""  dst=""/>
     </Action>
-    <Action type="Pack">
+    <Action type="PackDirs">
+        <File  src="" dst=""/>
+    </Action>
+    <Action type="PackFiles">
         <File  src="" dst=""/>
     </Action>
     <Action type="Run">
@@ -31,7 +34,7 @@
     <Action type="CopyFiles">
         <File  src="" dst=""/>
     </Action>
-    <Action type="CopyDir">
+    <Action type="CopyDirs">
         <File src="" dst=""/>
     </Action>
 </Update>

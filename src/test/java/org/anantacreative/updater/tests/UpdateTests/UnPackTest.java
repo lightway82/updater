@@ -11,7 +11,8 @@ public class UnPackTest extends BaseActionTest {
 
     @Override
     protected void testLogic(UpdateTask ut) throws Exception {
-        PackUnpackTest.checkUnPackTestArch(new File(getTestDir(),"unpacked_files"));
+        PackUnpackTest.checkUnPackTestArch(new File(getTestDir(),"unpacked_files1"));
+        PackUnpackTest.checkUnPackTestArch(new File(getTestDir(),"unpacked_files2"));
     }
 
     @Override
@@ -21,6 +22,6 @@ public class UnPackTest extends BaseActionTest {
 
     @Override
     protected String getUpdateXmlName() {
-        return "run_in.xml";
+        return "unpack.xml";
     }
 }

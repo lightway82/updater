@@ -1,0 +1,7 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<Update date="16.05.2017">
+    <Action type="PackFiles">
+        <File  src="./tmp/dst1" dst="./tmp/result1.zip"/>
+        <File  src="./tmp/dst2" dst="./tmp/result2.zip"/>
+    </Action>
+</Update>

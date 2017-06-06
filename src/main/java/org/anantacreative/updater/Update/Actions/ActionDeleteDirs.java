@@ -10,8 +10,8 @@ import java.util.List;
 /**
  * Удаление директории
  */
-public class ActionDeleteDir extends AbstractAction {
-    public ActionDeleteDir(ActionType actionType) {
+public class ActionDeleteDirs extends AbstractAction {
+    public ActionDeleteDirs(ActionType actionType) {
         super(actionType);
     }
 
