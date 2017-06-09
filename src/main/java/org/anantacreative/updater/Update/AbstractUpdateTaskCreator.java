@@ -96,7 +96,7 @@ public abstract class AbstractUpdateTaskCreator {
                     new DownloadingTask.TaskCompleteListener() {
                 @Override
                 public void complete() {
-                        listener.taskCompleted(task);
+                        listener.taskCompleted(task, getRootDirApp(), getDownloadsDir());
                 }
 
                 @Override
@@ -200,7 +200,7 @@ public abstract class AbstractUpdateTaskCreator {
 
 
     public interface Listener {
-         void taskCompleted(UpdateTask ut);
+         void taskCompleted(UpdateTask ut, File rootDirApp, File downloadDir);
          void error(Exception e);
          void completeFile(String url, File path);
          void currentFileProgress(float progress);

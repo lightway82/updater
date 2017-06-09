@@ -87,7 +87,7 @@ protected static class Value<T>{
         Value<UpdateTask> updateTaskValue = new Value<>();
         createTask(updateXml, new SimpleUpdateTaskCreatorListener() {
             @Override
-            public void taskCompleted(UpdateTask ut) {
+            public void taskCompleted(UpdateTask ut, File rootDirApp, File downloadDir) {
                 updateTaskValue.setValue(ut);
 
             }

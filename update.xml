@@ -7,7 +7,7 @@
     <Action type="Rename">
         <File  src="tmp/tmp2/bazoviy_kompleks_gerpes.zip" dst="tmp/tmp2/111.zip"/>
     </Action>
-    <Action type="DeleteDir">
+    <Action type="DeleteDirs">
         <File  src="" />
     </Action>
     <Action type="DeleteFiles">
@@ -16,7 +16,7 @@
     <Action type="Unpack">
         <File url=""  dst=""/>
     </Action>
-    <Action type="PackDir">
+    <Action type="PackDirs">
         <File  src="" dst=""/>
     </Action>
     <Action type="PackFiles">
@@ -29,7 +29,7 @@
     <Action type="CopyFiles">
         <File  src="" dst=""/>
     </Action>
-    <Action type="CopyDir">
+    <Action type="CopyDirs">
         <File src="" dst=""/>
     </Action>
 </Update>

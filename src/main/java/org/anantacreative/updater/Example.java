@@ -33,7 +33,7 @@ public class Example {
                         new File("./"),
                         new AbstractUpdateTaskCreator.Listener() {
                             @Override
-                            public void taskCompleted(UpdateTask ut) {
+                            public void taskCompleted(UpdateTask ut,File rootDirApp, File downloadDir) {
 
                                 System.out.println("Update  Task создан");
                                 try {
