@@ -3,6 +3,7 @@ package org.anantacreative.updater;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -146,7 +147,7 @@ public class FilesUtil {
      * @param toDstFile файл в который будет копирование
      */
     public static void copyFileToFile(File srcFile, File toDstFile) throws IOException {
-        Files.copy(srcFile.toPath(),toDstFile.toPath());
+        Files.copy(srcFile.toPath(),toDstFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
 

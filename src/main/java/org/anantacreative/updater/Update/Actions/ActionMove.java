@@ -8,6 +8,7 @@ import org.anantacreative.updater.Update.UpdateActionFileItem;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 /**
@@ -29,8 +30,8 @@ public class ActionMove  extends AbstractAction {
                 if(file.getUrl()==null)  src=file.getSrcPath();
                 else  src=file.getDownloadedFile();
 
-                if(FilesUtil.isFile(file.getDstPath()))  Files.move(src.toPath(),file.getDstPath().toPath());
-                else  Files.move(src.toPath(),new File(file.getDstPath(),file.getDownloadedFile().getName()).toPath());
+                if(FilesUtil.isFile(file.getDstPath()))  Files.move(src.toPath(),file.getDstPath().toPath(), StandardCopyOption.REPLACE_EXISTING);
+                else  Files.move(src.toPath(),new File(file.getDstPath(),file.getDownloadedFile().getName()).toPath(),StandardCopyOption.REPLACE_EXISTING);
 
             } catch (IOException e) {
                throw new UpdateActionException(getActionType(),file,e);

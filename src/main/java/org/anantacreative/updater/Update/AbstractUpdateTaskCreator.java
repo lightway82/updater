@@ -35,8 +35,10 @@ public abstract class AbstractUpdateTaskCreator {
      * @param rootDirApp   корневая директория приложения. От нее устанавливаются dst пути файлов и экшенов
      */
     public AbstractUpdateTaskCreator(File downloadsDir, Listener listener, File rootDirApp) {
-        if(downloadsDir.getPath().isEmpty()) this.downloadsDir = new File(".");
+        if(downloadsDir.getPath().isEmpty()) this.downloadsDir = new File("./");
         else this.downloadsDir = downloadsDir;
+        if(rootDirApp.getPath().isEmpty()) this.rootDirApp = new File(".");
+        else this.rootDirApp = rootDirApp;
         this.listener = listener;
         this.rootDirApp = rootDirApp;
         if(!downloadsDir.exists()) downloadsDir.mkdirs();
