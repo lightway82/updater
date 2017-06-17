@@ -27,7 +27,19 @@ public class ActionBuilderTest {
         }
     }
 
+    public void download() {
 
+        try {
+            UpdateAction action = ActionBuilder.build(ActionType.DOWNLOAD);
+            if (!(action instanceof ActionDownload)) org.testng.AssertJUnit.fail("Ожидается ActionDownload");
+
+            action = ActionBuilder.build(ActionType.DOWNLOAD.getTypeName());
+            if (!(action instanceof ActionDownload)) org.testng.AssertJUnit.fail("Ожидается ActionDownload");
+
+        } catch (ActionBuilder.UnknownActionError e) {
+            org.testng.AssertJUnit.fail("Ожидается ActionDownload. Получено исключение ActionBuilder.UnknownActionError");
+        }
+    }
 
 
     public void buildCopyFiles() {

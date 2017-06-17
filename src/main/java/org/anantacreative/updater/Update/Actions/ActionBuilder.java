@@ -47,6 +47,9 @@ public class ActionBuilder {
             case UNPACK:
                 action = new ActionUnpack(ActionType.UNPACK);
                 break;
+            case DOWNLOAD:
+                action = new ActionDownload(ActionType.DOWNLOAD);
+                break;
             default:
                 throw new UnknownActionError();
 

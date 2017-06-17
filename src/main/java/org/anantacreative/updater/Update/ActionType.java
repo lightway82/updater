@@ -15,6 +15,7 @@ public enum ActionType {
     RUN("Run"),
     COPY_FILES("CopyFiles"),
     COPY_DIRS("CopyDirs"),
+    DOWNLOAD("Download"),
     UNKNOWN("");
 
     private String typeName;
