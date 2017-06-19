@@ -150,5 +150,32 @@ public class FilesUtil {
         Files.copy(srcFile.toPath(),toDstFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
+    /**
+     * Удаляет пробелы из строки
+     * @param src исходная строка
+     * @return
+     */
+    public static String replaceAllSpaces(String src){
+        return src.replaceAll("\\s+","");
+    }
+
+    /**
+     * Заменяет все обратные слэши на прямые и устраняет их дубликаты( несколько бекслэшей аменится на один прямой)
+     * @param src исходная строка
+     * @return строка после замены
+     */
+    public static String replaceAllBackSlashes(String src){
+        return src.replaceAll("\\\\+","/");
+    }
+
+    /**
+     * Заменяет дибликаты прямых слэшей на один слэш
+     * @param src
+     * @return
+     */
+    public static String replaceDuplicatedSlashes(String src){
+        return src.replaceAll("/+","/");
+    }
+
 
 }

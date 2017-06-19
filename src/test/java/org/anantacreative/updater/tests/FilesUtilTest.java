@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
 import static org.testng.AssertJUnit.fail;
 
@@ -171,6 +172,22 @@ public class FilesUtilTest {
         FilesUtil.copyFileToFile(srcFile,dstFile);
         assertTrue("Файл не скопирован",dstFile.exists());
 
+    }
+
+    public void replaceAllSpaces(){
+        String src=" a  b c  л+   ";
+        String res="abcл+";
+        assertEquals(res,FilesUtil.replaceAllSpaces(src));
+    }
+
+    public void replaceAllBackSlashes(){
+        String src="\\awd\\as\\\\s\\";
+        String res="/awd/as/s/";
+        assertEquals(res,FilesUtil.replaceAllBackSlashes(src));
+    }
+
+    public void replaceDuplicatedSlashes(){
+        assertEquals(FilesUtil.replaceDuplicatedSlashes("///aa//dd/"),"/aa/dd/");
     }
 
 

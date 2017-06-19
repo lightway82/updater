@@ -8,6 +8,7 @@ import java.io.File;
 
 /**
  * Базовый класс для Actions
+ *
  */
 public abstract class AbstractAction implements UpdateAction {
     private ActionType actionType;

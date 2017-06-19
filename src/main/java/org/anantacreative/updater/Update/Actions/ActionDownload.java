@@ -7,7 +7,7 @@ import org.anantacreative.updater.Update.UpdateActionFileItem;
 import java.util.List;
 
 /**
- * Копировать директорию внутрь указанной директории
+ * Просто загрузка файла(url) в указанную директорию или просто в директорию загрузки если не указан dst
  */
 public class ActionDownload extends AbstractAction {
     protected ActionDownload(ActionType actionType) {
