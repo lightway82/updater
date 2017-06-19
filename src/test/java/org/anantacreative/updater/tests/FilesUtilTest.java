@@ -190,5 +190,12 @@ public class FilesUtilTest {
         assertEquals(FilesUtil.replaceDuplicatedSlashes("///aa//dd/"),"/aa/dd/");
     }
 
+    public void extractRelativePathFrom(){
+        File f1=new File("./tmp/");
+        File f2 =new File("tmp/dst/file.txt");
+        assertEquals(FilesUtil.extractRelativePathFrom(f1,f2),"dst/file.txt");
+
+    }
+
 
 }

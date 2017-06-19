@@ -178,4 +178,23 @@ public class FilesUtil {
     }
 
 
+
+    /*
+    public static String getRelativePathAfromB(String a,String b){
+        a = replaceAllBackSlashes(a);
+        a = replaceAllSpaces(a).replace("./","");
+        b = replaceAllBackSlashes(b);
+        b = replaceAllSpaces(b).replace("./","");
+
+        File f=new File("");
+        f.toURI().re
+
+    }
+    */
+
+    public static String extractRelativePathFrom(File commonPath, File forExtract){
+        return commonPath.toURI().relativize(forExtract.toURI()).getPath();
+
+    }
+
 }
