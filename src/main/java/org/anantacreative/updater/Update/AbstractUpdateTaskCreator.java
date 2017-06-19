@@ -1,6 +1,7 @@
 package org.anantacreative.updater.Update;
 
 import org.anantacreative.updater.Downloader.DownloadingTask;
+import org.anantacreative.updater.FilesUtil;
 
 import java.io.File;
 import java.net.URL;
@@ -9,6 +10,7 @@ import java.util.*;
 /**
  * Закачивает файлы для обновления и создает UpdateTask для проведения процедуры обновления.
  * Функции получения списка файлов и построения UpdateTask возлагаются на подклассы
+ * Все пути в actions указываются относительно корня приложения. Корень приложения указывается при создании подкласса AbstractUpdateTaskCreator
  */
 public abstract class AbstractUpdateTaskCreator {
 
@@ -30,18 +32,22 @@ public abstract class AbstractUpdateTaskCreator {
     }
 
     /**
-     * @param downloadsDir папка загрузки файлов
+     * @param downloadsPath относительный путь к директории загрузки. Путь относительно rootDirApp
      * @param listener     слушатель событий создания UpdateTask
      * @param rootDirApp   корневая директория приложения. От нее устанавливаются dst пути файлов и экшенов
      */
-    public AbstractUpdateTaskCreator(File downloadsDir, Listener listener, File rootDirApp) {
-        if(downloadsDir.getPath().isEmpty()) this.downloadsDir = new File("./");
-        else this.downloadsDir = downloadsDir;
+    public AbstractUpdateTaskCreator(String downloadsPath, Listener listener, File rootDirApp) {
         if(rootDirApp.getPath().isEmpty()) this.rootDirApp = new File(".");
         else this.rootDirApp = rootDirApp;
+
+        if(downloadsPath.isEmpty()) downloadsDir = rootDirApp;
+        else  downloadsDir=new File(rootDirApp, FilesUtil.replaceAllSpaces(FilesUtil.replaceAllBackSlashes(downloadsPath)));
+
         this.listener = listener;
         this.rootDirApp = rootDirApp;
         if(!downloadsDir.exists()) downloadsDir.mkdirs();
+
+        PathTemplates.setVar(PathTemplates.DOWNLOAD_DIR,downloadsPath);
     }
 
     private int currentProgress;

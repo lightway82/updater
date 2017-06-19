@@ -1,0 +1,9 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<Update date="16.05.2017">
+    <Action type="Download">
+        <File url="http://localhost:3000/update/file1.txt" />
+    </Action>
+    <Action type="Move">
+        <File src="${DOWNLOAD_DIR}/file1.txt" dst="tmp/file1.txt"></File>
+    </Action>
+</Update>

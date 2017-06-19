@@ -1,7 +1,11 @@
 package org.anantacreative.updater.Update;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.anantacreative.updater.FilesUtil;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,11 +21,11 @@ public class PathTemplates {
     private static String headDelimiter = "${";
     private static String tailDelimiter = "}";
 
-    private static Map<String, String> varsMap = new HashMap<>();
+    private static Map<String, Variable> varsMap = new HashMap<>();
     public static final String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 
     static {
-        varsMap.put(DOWNLOAD_DIR, "");
+        varsMap.put(DOWNLOAD_DIR, new Variable(DOWNLOAD_DIR,""));
     }
 
     /**
@@ -30,10 +34,13 @@ public class PathTemplates {
      * @param val присваемое значение
      */
     public static void setVar(String var, String val) {
-        varsMap.put(var, FilesUtil.replaceAllBackSlashes(val).trim());
+        if(varsMap.containsKey(var))varsMap.get(var).setVal( FilesUtil.replaceAllBackSlashes(val).trim());
+        else varsMap.put(var, new Variable(var,FilesUtil.replaceAllBackSlashes(val).trim()));
     }
 
-
+    public static Collection<Variable> getAllVars(){
+        return varsMap.values();
+    }
 
 
     /**
@@ -47,8 +54,8 @@ public class PathTemplates {
      */
     public static String replaceVarsInPath(String src) {
         String result = FilesUtil.replaceAllSpaces(src);
-        for (Map.Entry<String, String> entry : varsMap.entrySet()) {
-            result = replaceVarInPath( entry.getKey(), entry.getValue(), result);
+        for (Map.Entry<String, Variable> entry : varsMap.entrySet()) {
+            result = replaceVarInPath( entry.getKey(), entry.getValue().getVal(), result);
         }
 
         return result;
@@ -59,6 +66,14 @@ public class PathTemplates {
         int startIndex = src.indexOf(template);
         if(startIndex==-1) return src;
         return FilesUtil.replaceDuplicatedSlashes(src.replace(template,val));
+    }
+
+    @Data
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    public static final  class Variable{
+        private String name;
+        private String val;
+
     }
 
 }

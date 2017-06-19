@@ -1,4 +1,5 @@
 <?xml version="1.1" encoding="UTF-8" ?>
+<!-- Все пути в actions указываются относительно корня приложения. Корень приложения указывается при создании подкласса AbstractUpdateTaskCreator -->
 <Update date="16.05.2017">
     <Action type="Move">
         <File url="http://www.biomedis.ru/doc/bazovie_kompleksi/bazoviy_kompleks_utro.zip"  dst="tmp"/>

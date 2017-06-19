@@ -133,7 +133,7 @@ protected static class Value<T>{
         UpdateTask task=null;
 
         XmlUpdateTaskCreator taskCreator=new XmlUpdateTaskCreator(
-                new File("./downloading"),
+                "downloading",
                 new File("./"),
                 listener,
                 new URL("http://localhost:"+TestingUpdateServer.getPort()+"/update_suit/"+updateFileName));

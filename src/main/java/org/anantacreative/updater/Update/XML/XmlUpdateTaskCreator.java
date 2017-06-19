@@ -16,24 +16,24 @@ public class XmlUpdateTaskCreator extends AbstractUpdateTaskCreator {
 
 
     /**
-     * @param downloadsDir папка загрузки
+     * @param downloadsPath путь к директории загрузки относительно rootDirApp
      * @param rootDirApp   корневая директория приложения. От нее устанавливаются dst пути файлов и экшенов
      * @param listener     слушатель событий создания UpdateTask
      * @param fileURL      url файла update.xml
      */
-    public XmlUpdateTaskCreator(File downloadsDir, File rootDirApp, Listener listener, URL fileURL) {
-        super(downloadsDir, listener, rootDirApp);
+    public XmlUpdateTaskCreator(String downloadsPath, File rootDirApp, Listener listener, URL fileURL) {
+        super(downloadsPath, listener, rootDirApp);
         this.fileURL = fileURL;
     }
 
     /**
-     * @param downloadsDir папка загрузки
+     * @param downloadsPath путь к директории загрузки относительно rootDirApp
      * @param rootDirApp   корневая директория приложения. От нее устанавливаются dst пути файлов и экшенов
      * @param listener     слушатель событий создания UpdateTask
      * @param file         файл update.xml
      */
-    public XmlUpdateTaskCreator(File downloadsDir, File rootDirApp, Listener listener, File file) {
-        super(downloadsDir, listener, rootDirApp);
+    public XmlUpdateTaskCreator(String downloadsPath, File rootDirApp, Listener listener, File file) {
+        super(downloadsPath, listener, rootDirApp);
         this.file = file;
     }
 

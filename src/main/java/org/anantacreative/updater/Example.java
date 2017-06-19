@@ -29,7 +29,7 @@ public class Example {
                 System.out.println("Текцщая версия = "+ versionChecker.getCurrentVersion());
 
                  taskCreator=new XmlUpdateTaskCreator(
-                        new File("./downloads/"),
+                        "downloads/",
                         new File("./"),
                         new AbstractUpdateTaskCreator.Listener() {
                             @Override

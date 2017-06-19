@@ -68,7 +68,7 @@ public class UpdateActionFileItem {
          * @return
          */
         public Builder setSrcPath(String src, File rootDirApp) {
-            srcPath = new File(rootDirApp, src.replace("./",""));
+            srcPath = new File(rootDirApp, PathTemplates.replaceVarsInPath(src.replace("./","")));
             return this;
         }
         /**
@@ -79,7 +79,7 @@ public class UpdateActionFileItem {
          * @return
          */
         public Builder setDstPath(String dst, File rootDirApp) {
-            dstPath = new File(rootDirApp, dst.replace("./",""));
+            dstPath = new File(rootDirApp, PathTemplates.replaceVarsInPath(dst.replace("./","")));
             return this;
         }
 
