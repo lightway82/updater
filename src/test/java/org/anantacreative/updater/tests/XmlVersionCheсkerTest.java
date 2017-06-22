@@ -51,4 +51,38 @@ public class XmlVersionCheсkerTest {
             fail();
         }
     }
+
+    public void asyncTest() throws Exception {
+        Version version = new Version(1, 2, 3);
+        XmlVersionChecker checker= null;
+        final Value<Boolean> result =new Value<>();
+
+
+            checker = new XmlVersionChecker(version,new URL("http://localhost:"+ TestingUpdateServer.getPort()+"/version.xml"));
+            checker.checkNeedUpdateAsync()
+                   .thenAccept(val->{
+                       result.setValue(val);
+
+                   })
+            .exceptionally(e -> {
+                result.setError();
+                e.printStackTrace();
+
+                return null;
+            });
+
+            while (!result.isComplete()){
+
+                Thread.sleep(1000);
+            }
+
+            if(result.isPresent())  assertTrue("Не совпадают версии. Ожидается совпадение",!result.getValue());
+            else if(result.isError() )  {
+                if(result.getErrorCause().isPresent()) throw result.getErrorCause().get();
+                else throw new Exception();
+            }
+
+
+
+    }
 }

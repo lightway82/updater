@@ -2,6 +2,8 @@ package org.anantacreative.updater.VersionCheck;
 
 import org.anantacreative.updater.Version;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Абстрактный класс проверки соответствия версии программы и версии для обновления
  * В подклассах следует реализовать  getVersionForUpdate() согласно своей стратегии.
@@ -28,6 +30,22 @@ public abstract class AbstractVersionChecker {
         actualVersion = getVersionForUpdate();
         if (actualVersion == null) throw new DefineActualVersionError("");
         return currentVersion.lessThen(actualVersion);
+    }
+
+    public CompletableFuture<Boolean> checkNeedUpdateAsync() {
+        CompletableFuture<Boolean> future =new CompletableFuture<>();
+        future.runAsync(() -> {
+            try {
+                actualVersion = getVersionForUpdate();
+                if (actualVersion == null) throw new DefineActualVersionError("");
+                 future.complete(currentVersion.lessThen(actualVersion));
+            } catch (DefineActualVersionError e) {
+                future.completeExceptionally(e);
+            }
+
+        });
+
+        return future;
     }
 
    protected abstract Version getVersionForUpdate() throws DefineActualVersionError;

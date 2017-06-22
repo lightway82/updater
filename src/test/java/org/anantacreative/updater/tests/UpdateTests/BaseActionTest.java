@@ -5,6 +5,7 @@ import org.anantacreative.updater.Update.AbstractUpdateTaskCreator;
 import org.anantacreative.updater.Update.UpdateTask;
 import org.anantacreative.updater.Update.XML.XmlUpdateTaskCreator;
 import org.anantacreative.updater.tests.TestUtil;
+import org.anantacreative.updater.tests.Value;
 import org.anantacreative.updater.tests.server.TestingUpdateServer;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -22,39 +23,6 @@ import static org.testng.AssertJUnit.*;
  */
 public abstract class BaseActionTest {
 
-protected static class Value<T>{
-    private T value;
-    private boolean present;
-    private boolean error;
-    private boolean complete;
-
-
-    public boolean isPresent(){return present && !error && complete;}
-
-    public boolean isError() {
-        return error;
-    }
-
-    public boolean isComplete() {
-        return complete;
-    }
-
-    public void setError() {
-        error = true;
-        complete=true;
-
-    }
-
-    public T getValue() {
-        return value;
-    }
-
-    public void setValue(T value) {
-        present=true;
-        complete=true;
-        this.value = value;
-    }
-}
 
    private static File TEST_DIR=new File("./tmp");
 
