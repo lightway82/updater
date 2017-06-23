@@ -131,6 +131,7 @@ private void breakinglink() {
      thread = new Thread(this);
      thread.setName("Downloader="+this.pathToFile.getName());
      if(!createDirIfNotExists(pathToFile)) {error();return;}
+     thread.setDaemon(true);
      thread.start();
   }
 
