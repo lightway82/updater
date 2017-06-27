@@ -1,7 +1,7 @@
 package org.anantacreative.updater;
 
 import org.anantacreative.updater.Update.AbstractUpdateTaskCreator;
-import org.anantacreative.updater.Update.UpdateActionException;
+import org.anantacreative.updater.Update.UpdateException;
 import org.anantacreative.updater.Update.UpdateTask;
 import org.anantacreative.updater.Update.XML.XmlUpdateTaskCreator;
 import org.anantacreative.updater.VersionCheck.DefineActualVersionError;
@@ -49,7 +49,7 @@ public class Example {
                                         }
 
                                         @Override
-                                        public void error(UpdateActionException e) {
+                                        public void error(UpdateException e) {
 
                                         }
                                     });

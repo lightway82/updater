@@ -2,7 +2,7 @@ package org.anantacreative.updater.tests.UpdateTests;
 
 import org.anantacreative.updater.FilesUtil;
 import org.anantacreative.updater.Update.AbstractUpdateTaskCreator;
-import org.anantacreative.updater.Update.UpdateActionException;
+import org.anantacreative.updater.Update.UpdateException;
 import org.anantacreative.updater.Update.UpdateTask;
 import org.anantacreative.updater.Update.XML.XmlUpdateTaskCreator;
 import org.anantacreative.updater.tests.TestUtil;
@@ -92,7 +92,7 @@ public abstract class BaseActionTest {
                 }
 
                 @Override
-                public void error(UpdateActionException e) {
+                public void error(UpdateException e) {
                     updateProcessValue.setError(e);
                 }
             });

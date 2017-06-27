@@ -51,7 +51,9 @@ public class UpdateTask {
                 }
                 listener.completed();
             } catch (UpdateActionException e) {
-                listener.error(e);
+                listener.error(new UpdateException(e));
+            }catch (Exception e){
+                listener.error(new UpdateException(e));
             }
         });
         thread.start();
@@ -73,7 +75,7 @@ public class UpdateTask {
     public interface UpdateListener{
         void progress(int persent);
         void completed();
-        void error(UpdateActionException e);
+        void error(UpdateException e);
     }
 
 }
