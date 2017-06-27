@@ -1,5 +1,7 @@
 package org.anantacreative.updater.Update;
 
+import org.anantacreative.updater.CommonUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,11 +37,28 @@ public class UpdateTask {
 
     /**
      * Запускает процесс выполение списка Action  для обновления
+     * @param listener слушатель событий процесса обновления
+     * @return число элементов UpdateAction в обновлении
      */
-    public void update() throws UpdateActionException {
-        for (UpdateTaskItem item : updateItems) item.execute();
-
+    public int update(UpdateListener listener) {
+        if(listener == null) throw new RuntimeException("UpdateListener is NULL");
+        final int totalActions = this.updateItems.size();
+        Thread thread = new Thread(() -> {
+            try {
+                for (int i=0; i < updateItems.size(); i++) {
+                    updateItems.get(i).execute();
+                    listener.progress(CommonUtils.calculatePersent(i+1, totalActions));
+                }
+                listener.completed();
+            } catch (UpdateActionException e) {
+                listener.error(e);
+            }
+        });
+        thread.start();
+        return totalActions;
     }
+
+
 
 
     /**
@@ -51,5 +70,10 @@ public class UpdateTask {
         return updateItems.stream().flatMap(f -> f.getDownloadingFiles().stream()).filter(f->f.getUrl()!=null).collect(Collectors.toList());
     }
 
+    public interface UpdateListener{
+        void progress(int persent);
+        void completed();
+        void error(UpdateActionException e);
+    }
 
 }

@@ -2,6 +2,7 @@ package org.anantacreative.updater.tests.UpdateTests;
 
 import org.anantacreative.updater.FilesUtil;
 import org.anantacreative.updater.Update.AbstractUpdateTaskCreator;
+import org.anantacreative.updater.Update.UpdateActionException;
 import org.anantacreative.updater.Update.UpdateTask;
 import org.anantacreative.updater.Update.XML.XmlUpdateTaskCreator;
 import org.anantacreative.updater.tests.TestUtil;
@@ -15,6 +16,7 @@ import org.xml.sax.SAXException;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.testng.AssertJUnit.*;
 
@@ -76,12 +78,30 @@ public abstract class BaseActionTest {
 
         assertNotNull("Не создан объект UpdateTask",ut);
 
-        try {
-            ut.update();
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("Ошибка выполнения Action  обновления. \n"+ e.getMessage());
+        Value<Boolean> updateProcessValue = new Value<>();
+        AtomicInteger progress = new AtomicInteger(0);
+           int totalActions = ut.update(new UpdateTask.UpdateListener() {
+                @Override
+                public void progress(int persent) {
+                    progress.set(persent);
+                }
+
+                @Override
+                public void completed() {
+                    updateProcessValue.setValue(true);
+                }
+
+                @Override
+                public void error(UpdateActionException e) {
+                    updateProcessValue.setError(e);
+                }
+            });
+
+        while (!updateProcessValue.isComplete()){
+            Thread.sleep(500);
         }
+
+        assertTrue(progress.intValue() == totalActions*100);
         testLogic(ut);
     }
 

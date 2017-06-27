@@ -36,11 +36,24 @@ public class Example {
                             public void taskCompleted(UpdateTask ut,File rootDirApp, File downloadDir) {
 
                                 System.out.println("Update  Task создан");
-                                try {
-                                    ut.update();
-                                } catch (UpdateActionException e) {
-                                    e.printStackTrace();
-                                }
+
+                                    ut.update(new UpdateTask.UpdateListener() {
+                                        @Override
+                                        public void progress(int persent) {
+
+                                        }
+
+                                        @Override
+                                        public void completed() {
+
+                                        }
+
+                                        @Override
+                                        public void error(UpdateActionException e) {
+
+                                        }
+                                    });
+
                             }
 
                             @Override
