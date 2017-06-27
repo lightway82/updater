@@ -101,7 +101,7 @@ public abstract class BaseActionTest {
             Thread.sleep(500);
         }
 
-        assertTrue(progress.intValue() == totalActions*100);
+        assertTrue(progress.intValue() == 100);
         testLogic(ut);
     }
 
