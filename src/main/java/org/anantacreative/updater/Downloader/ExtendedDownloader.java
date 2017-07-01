@@ -6,13 +6,12 @@
 
 package org.anantacreative.updater.Downloader;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Observable;
+
+import static org.anantacreative.updater.Downloader.ExtendedDownloader.DownloadingStatus.*;
 
 /**
  *
@@ -20,62 +19,65 @@ import java.util.Observable;
  */
 public class ExtendedDownloader  extends Observable implements Runnable 
 {
+    private static final int CONNECTION_TIMEOUT = 10000;
+    private static final int READING_TIMEOUT = 30000;
 
-     // Max size of download buffer.
-  private static final int MAX_BUFFER_SIZE = 1024;
+    private static final int MAX_BUFFER_SIZE = 1024;
 
-  // These are the status names.
-  public static final String STATUSES[] = {"Downloading",
-    "Paused", "Complete", "Cancelled", "Error","BreakingLink"};
-
-  // These are the status codes.
-  public static final int DOWNLOADING = 0;
-  public static final int PAUSED = 1;
-  public static final int COMPLETE = 2;
-  public static final int CANCELLED = 3;
-  public static final int ERROR = 4;
-  public static final int BREAKINGLINK = 5;
- 
+    public enum DownloadingStatus {
+        DOWNLOADING,
+        PAUSED,
+        COMPLETE,
+        CANCELLED,
+        ERROR,
+        BREAKINGLINK,
+    }
 
   private URL url; // download URL
   private int size; // size of download in bytes
   private int downloaded; // number of bytes downloaded
-  private int status; // current status of download
+  private DownloadingStatus status; // current status of download
   private File pathToFile;
-  private boolean newDownload;
-  private Object param;
+  private boolean reloadFile;
+
   
  public Thread thread;
 
     /**
      *
      * @param url url закачки
-     * @param pathToFile файл в который закачивается, не папка, а именно файл.
-     * @param newDownload
-     * @param param
+     * @param dst файл в который закачивается, не папка, а именно файл.
+     * @param reloadFile
      */
-  public ExtendedDownloader(URL url, File pathToFile,boolean newDownload, Object param) {
+  public ExtendedDownloader(URL url, File dst, boolean reloadFile) {
     this.url = url;
     size = -1;
     downloaded = 0;
     status = DOWNLOADING;
-    this.pathToFile=pathToFile;
-    this.newDownload=newDownload;
-    this.param=param;
-
+    this.pathToFile=dst;
+    this.reloadFile =reloadFile;
   }
 
     /**
      * Путь файлу в который закачиваются данные
      * @return
      */
-  public File getFile(){return pathToFile;}
+  public File getFile(){
+      return pathToFile;
+  }
+
+    /**
+     * Стартует закачку
+     */
   public void startDownload(){
-// Begin the download.
     download();
   }
-public Object getParam(){return param; }
-  // Get this download's URL.
+
+
+    /**
+     * Получает URL закачки
+     * @return
+     */
   public String getUrl() {
     return url.toString();
   }
@@ -90,80 +92,92 @@ public Object getParam(){return param; }
     return ((float) downloaded / size) * 100;
   }
 
-  // Get this download's status.
-  public int getStatus() {
+    /**
+     * Текущий статус закачки
+     * @return
+     */
+  public DownloadingStatus getStatus() {
     return status;
   }
 
-  // Pause this download.
+    /**
+     * Приостоновка закачки
+     */
   public void pause() {
     status = PAUSED;
     stateChanged();
   }
 
-  // Resume this download.
+    /**
+     * Возобновление закачки
+     */
   public void resume() {
     status = DOWNLOADING;
     stateChanged();
     download();
   }
 
-  // Cancel this download.
+    /**
+     * Отмена закачки
+     */
   public void cancel() {
     status = CANCELLED;
     stateChanged();
   }
 
-  // Mark this download as having an error.
-  private void error() {
+
+  private void setErrorState() {
     status = ERROR;
     stateChanged();
   }
-private void breakinglink() {
+
+  private void setBreakingLinkState() {
     status = BREAKINGLINK;
     stateChanged();
-    
   }
  
   
-  // Start or resume downloading.
+
   private void download() {
      thread = new Thread(this);
      thread.setName("Downloader="+this.pathToFile.getName());
-     if(!createDirIfNotExists(pathToFile)) {error();return;}
+     if(!createDirIfNotExists(pathToFile)) {
+         setErrorState();
+         return;
+     }
      thread.setDaemon(true);
      thread.start();
   }
 
  
 
-  // Download file.
+
   public void run() {
     RandomAccessFile file = null;
     InputStream stream = null;
-   int downloadedPrev=0; //ранее загруженно 
+    int downloadedPrev=0; //ранее загруженно
     try {
-      // Open connection to URL.
-      HttpURLConnection connection =
-        (HttpURLConnection) url.openConnection();
-        connection.setConnectTimeout(15000);
-        connection.setReadTimeout(30000);
+
+
+        HttpURLConnection connection = getConnection();
       if(size==-1)
       {
       //заново создаем объект закачки
-            if(status == DOWNLOADING && newDownload)downloaded=0;
+            if(status == DOWNLOADING && reloadFile)downloaded=0;
             if(status == DOWNLOADING)
             {
               //определим размер скаченного уже. Работает в случае если прерывали закачку не по паузе.
-               
+
               downloadedPrev  = (int)pathToFile.length();
               downloaded =downloadedPrev;
             }
       }
-      if(newDownload){
+
+      if(reloadFile){
           downloaded=0;
           downloadedPrev=0;
       }
+
       // Specify what portion of file to download.
       connection.setRequestProperty("Range", "bytes=" + downloaded + "-");
 
@@ -172,13 +186,13 @@ private void breakinglink() {
 
         //файл уже скачан, проверка только в режиме докачки
 
-        if (connection.getResponseCode() == 416 && !newDownload){
+        if (connection.getResponseCode() == 416 && !reloadFile){
                 status = COMPLETE;
                 stateChanged();
                 return;
         }else if (connection.getResponseCode() / 100 != 2)
         {
-            this.breakinglink();
+            this.setBreakingLinkState();
             return;
         }
 
@@ -187,7 +201,7 @@ private void breakinglink() {
       // Check for valid content length.
       int contentLength = connection.getContentLength();
       if (contentLength < 1) {
-       this.breakinglink();
+       this.setBreakingLinkState();
         return;
       }
 
@@ -243,10 +257,10 @@ private void breakinglink() {
     }catch(FileNotFoundException e)
     {
         e.printStackTrace();
-       this.error();
+       this.setErrorState();
     }
     catch (Exception e) {
-      error();
+      setErrorState();
      e.printStackTrace();//убрать по окончанию отладки
     
     } finally {
@@ -264,6 +278,21 @@ private void breakinglink() {
         } catch (Exception e) {}
       }
     }
+  }
+
+    private HttpURLConnection getConnection() throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setConnectTimeout(CONNECTION_TIMEOUT);
+        connection.setReadTimeout(READING_TIMEOUT);
+        return connection;
+    }
+
+    /**
+     * Новая закачка
+     * @return
+     */
+  private boolean isReloadFile(){
+      return size ==-1;
   }
 
   // Notify observers that this download's status has changed.

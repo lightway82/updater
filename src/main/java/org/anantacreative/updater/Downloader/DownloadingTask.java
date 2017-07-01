@@ -9,6 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
+import static org.anantacreative.updater.Downloader.ExtendedDownloader.DownloadingStatus.*;
+
 /**
  * Задание на загрузку файлов
  */
@@ -64,7 +66,7 @@ public class DownloadingTask implements Observer {
         if (currentDownloader != null) currentDownloader.deleteObserver(this);
         if (!iterator.hasNext()) return false;
         currentDownloadingItem = iterator.next();
-        currentDownloader = new ExtendedDownloader(currentDownloadingItem.getUrl(), currentDownloadingItem.getDstPath(), reloadAll, 0);
+        currentDownloader = new ExtendedDownloader(currentDownloadingItem.getUrl(), currentDownloadingItem.getDstPath(), reloadAll);
 
         currentDownloader.addObserver(this);
         currentDownloader.startDownload();
@@ -84,9 +86,9 @@ public class DownloadingTask implements Observer {
             return;
         }
 
-        int status = currentDownloader.getStatus();
+        ExtendedDownloader.DownloadingStatus status = currentDownloader.getStatus();
         switch (status) {
-            case ExtendedDownloader.COMPLETE:
+            case COMPLETE:
 
                 try {
                     completer.completeFile(currentDownloadingItem);
@@ -96,19 +98,19 @@ public class DownloadingTask implements Observer {
                     completer.error(e.getMessage());
                 }
                 break;
-            case ExtendedDownloader.BREAKINGLINK:
-            case ExtendedDownloader.ERROR:
+            case BREAKINGLINK:
+            case ERROR:
                 //битая ссылка  или проблемы с доступом
-                if (status == ExtendedDownloader.BREAKINGLINK) {
+                if (status == BREAKINGLINK) {
                     completer.error("BREAKING LINK");
 
                 } else completer.error("");
                 stop();
                 break;
-            case ExtendedDownloader.DOWNLOADING:
+            case DOWNLOADING:
                 completer.currentFileProgress(currentDownloader.getProgress());
                 break;
-            case ExtendedDownloader.CANCELLED:
+            case CANCELLED:
                 completer.canceled();
                 break;
         }
