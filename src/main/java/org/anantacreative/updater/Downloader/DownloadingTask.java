@@ -9,7 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
-import static org.anantacreative.updater.Downloader.ExtendedDownloader.DownloadingStatus.*;
+import static org.anantacreative.updater.Downloader.ExtendedDownloader.DownloadingState.*;
 
 /**
  * Задание на загрузку файлов
@@ -69,7 +69,7 @@ public class DownloadingTask implements Observer {
         currentDownloader = new ExtendedDownloader(currentDownloadingItem.getUrl(), currentDownloadingItem.getDstPath(), reloadAll);
 
         currentDownloader.addObserver(this);
-        currentDownloader.startDownload();
+        currentDownloader.download();
 
         return true;
     }
@@ -86,7 +86,7 @@ public class DownloadingTask implements Observer {
             return;
         }
 
-        ExtendedDownloader.DownloadingStatus status = currentDownloader.getStatus();
+        ExtendedDownloader.DownloadingState status = currentDownloader.getState();
         switch (status) {
             case COMPLETE:
 
@@ -98,10 +98,10 @@ public class DownloadingTask implements Observer {
                     completer.error(e.getMessage());
                 }
                 break;
-            case BREAKINGLINK:
+            case BREAKING_LINK:
             case ERROR:
                 //битая ссылка  или проблемы с доступом
-                if (status == BREAKINGLINK) {
+                if (status == BREAKING_LINK) {
                     completer.error("BREAKING LINK");
 
                 } else completer.error("");

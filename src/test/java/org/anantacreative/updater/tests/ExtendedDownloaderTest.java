@@ -39,15 +39,17 @@ public class ExtendedDownloaderTest {
         downloader = new ExtendedDownloader(url, dst, true);
         observer = new DownloadingCompleteObserver();
         downloader.addObserver(observer);
-        downloader.startDownload();
+        downloader.download();
 
 
         while (!observer.isComplete()){
           Thread.sleep(1000);
         }
 
-        if(observer.isError()) AssertJUnit.fail(observer.getCause().map(e -> e.getMessage()).orElse(""));
-
+        if(observer.isError()) {
+            observer.getCause().ifPresent(e -> e.printStackTrace());
+            AssertJUnit.fail(observer.getCause().map(e -> e.getMessage()).orElse(""));
+        }
         TestUtil.hasFilesInDir(dir, Arrays.asList(dst.getName()),true);
         AssertJUnit.assertEquals(HASH,FilesUtil.getHashOfFile(dst));
 
@@ -66,14 +68,17 @@ public class ExtendedDownloaderTest {
         downloader = new ExtendedDownloader(url, dst, false);
         observer = new DownloadingCompleteObserver();
         downloader.addObserver(observer);
-        downloader.startDownload();
+        downloader.download();
 
 
         while (!observer.isComplete()){
             Thread.sleep(1000);
         }
 
-        if(observer.isError()) AssertJUnit.fail(observer.getCause().map(e -> e.getMessage()).orElse(""));
+        if(observer.isError()){
+            observer.getCause().ifPresent(e -> e.printStackTrace());
+            AssertJUnit.fail(observer.getCause().map(e -> e.getMessage()).orElse(""));
+        }
 
         TestUtil.hasFilesInDir(dir, Arrays.asList(dst.getName()),true);
         AssertJUnit.assertEquals(HASH,FilesUtil.getHashOfFile(dst));
@@ -90,19 +95,23 @@ public class ExtendedDownloaderTest {
         downloader = new ExtendedDownloader(url, dst, true);
         DownloadingResumeObserver observer = new DownloadingResumeObserver();
         downloader.addObserver(observer);
-        downloader.startDownload();
+        downloader.download();
 
         while (!observer.isPartDownloaded()){
             Thread.sleep(5);
         }
         AssertJUnit.assertTrue("Загрузка здесь не должна быть завершена",!observer.isComplete());
+
         downloader.resume();
 
         while (!observer.isComplete()){
             Thread.sleep(1000);
         }
 
-        if(observer.isError()) AssertJUnit.fail(observer.getCause().map(e -> e.getMessage()).orElse(""));
+        if(observer.isError()) {
+            observer.getCause().ifPresent(e -> e.printStackTrace());
+            AssertJUnit.fail(observer.getCause().map(e -> e.getMessage()).orElse(""));
+        }
 
         TestUtil.hasFilesInDir(dir, Arrays.asList(dst.getName()),true);
         AssertJUnit.assertEquals(HASH,FilesUtil.getHashOfFile(dst));
@@ -119,7 +128,7 @@ public class ExtendedDownloaderTest {
         downloader = new ExtendedDownloader(url, new File(dir,"file.txt"), false);
         observer = new DownloadingCompleteObserver();
         downloader.addObserver(observer);
-        downloader.startDownload();
+        downloader.download();
 
         while (!observer.isComplete()){
             Thread.sleep(1000);
@@ -156,10 +165,10 @@ public class ExtendedDownloaderTest {
             }
 
 
-            stateLogic(downloader.getStatus(),downloader);
+            stateLogic(downloader.getState(),downloader, value);
         }
 
-        public abstract void stateLogic(ExtendedDownloader.DownloadingStatus status, ExtendedDownloader downloader);
+        public abstract void stateLogic(ExtendedDownloader.DownloadingState status, ExtendedDownloader downloader, Value<Boolean> value);
     }
 
 
@@ -169,19 +178,16 @@ public class ExtendedDownloaderTest {
 
 
         @Override
-        public void stateLogic(ExtendedDownloader.DownloadingStatus status, ExtendedDownloader downloader) {
+        public void stateLogic(ExtendedDownloader.DownloadingState status, ExtendedDownloader downloader, Value<Boolean> value) {
             switch (status) {
                 case COMPLETE:
-
                     value.setValue(true);
                     break;
-                case BREAKINGLINK:
-
+                case BREAKING_LINK:
                     value.setError(new Exception("BreakingLink"));
                     break;
                 case ERROR:
-
-                    value.setError(new Exception("Error"));
+                    value.setError(new Exception(downloader.getException()));
                     break;
                 case DOWNLOADING:
                     break;
@@ -196,27 +202,26 @@ public class ExtendedDownloaderTest {
         private boolean partDownloaded=false;
 
         @Override
-        public void stateLogic(ExtendedDownloader.DownloadingStatus status, ExtendedDownloader downloader) {
+        public void stateLogic(ExtendedDownloader.DownloadingState status, ExtendedDownloader downloader, Value<Boolean> value) {
             switch (status) {
                 case COMPLETE:
 
                     value.setValue(true);
                     break;
-                case BREAKINGLINK:
-
+                case BREAKING_LINK:
                     value.setError(new Exception("BreakingLink"));
                     break;
                 case ERROR:
-
-                    value.setError(new Exception("Error"));
+                    value.setError(new Exception(downloader.getException()));
                     break;
                 case DOWNLOADING:
+
                     if(!partDownloaded){
 
                         if(downloader.getProgress()>0) {
                             downloader.pause();
                             partDownloaded=true;
-                            System.out.println("PAUSED");
+
                         }
                     }
                     break;
