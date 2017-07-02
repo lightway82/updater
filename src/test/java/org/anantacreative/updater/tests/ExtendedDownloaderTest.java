@@ -1,6 +1,7 @@
 package org.anantacreative.updater.tests;
 
 import org.anantacreative.updater.Downloader.ExtendedDownloader;
+import org.anantacreative.updater.FilesUtil;
 import org.anantacreative.updater.ResourceUtil;
 import org.anantacreative.updater.tests.server.TestingUpdateServer;
 import org.testng.AssertJUnit;
@@ -14,24 +15,29 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Optional;
 
-
+@Test(groups = {"common"},timeOut = 40000)
 public class ExtendedDownloaderTest {
     private ExtendedDownloader downloader;
     private  DownloadingObserver observer;
+    private  String HASH;
+
 
     @BeforeClass
-    public void init(){
+    public void init() throws Exception {
         TestingUpdateServer.startServer();
+        File dir = TestUtil.initTestDir("./tmp");
+        File file = ResourceUtil.saveResource(dir,"test.zip","/test.zip",true);
+        HASH = FilesUtil.getHashOfFile(file);
     }
 
-    @Test(groups = {"common"},timeOut = 10000)
+
     public void newDownload() throws Exception {
 
-        File dir = TestUtil.initTestDir("./tmp");
-        File dst = new File(dir, "tst.txt");
-        URL url = new URL("http://localhost:" + TestingUpdateServer.getPort() + "/version.xml");
+        File dir = TestUtil.initTestDir("./test");
+        File dst = new File(dir, "test.zip");
+        URL url = new URL("http://localhost:" + TestingUpdateServer.getPort() + "/test.zip");
         downloader = new ExtendedDownloader(url, dst, true);
-        observer = new DownloadingObserver();
+        observer = new DownloadingCompleteObserver();
         downloader.addObserver(observer);
         downloader.startDownload();
 
@@ -43,21 +49,22 @@ public class ExtendedDownloaderTest {
         if(observer.isError()) AssertJUnit.fail(observer.getCause().map(e -> e.getMessage()).orElse(""));
 
         TestUtil.hasFilesInDir(dir, Arrays.asList(dst.getName()),true);
+        AssertJUnit.assertEquals(HASH,FilesUtil.getHashOfFile(dst));
 
     }
 
-    @Test(groups = {"common"})
+
     public void partedDownload() throws Exception {
 
 
-        File dir = TestUtil.initTestDir("./tmp");
-        File dst = new File(dir, "version.xml");
-        ResourceUtil.saveResource(dir,dst.getName(),"/webroot/version.xml",true);
+        File dir = TestUtil.initTestDir("./test");
+        File dst = new File(dir, "test.zip");
+        ResourceUtil.saveResource(dir,dst.getName(),"/webroot/test.zip",true);
 
 
-        URL url = new URL("http://localhost:" + TestingUpdateServer.getPort() + "/version.xml");
+        URL url = new URL("http://localhost:" + TestingUpdateServer.getPort() + "/test.zip");
         downloader = new ExtendedDownloader(url, dst, false);
-        observer = new DownloadingObserver();
+        observer = new DownloadingCompleteObserver();
         downloader.addObserver(observer);
         downloader.startDownload();
 
@@ -69,20 +76,50 @@ public class ExtendedDownloaderTest {
         if(observer.isError()) AssertJUnit.fail(observer.getCause().map(e -> e.getMessage()).orElse(""));
 
         TestUtil.hasFilesInDir(dir, Arrays.asList(dst.getName()),true);
-
+        AssertJUnit.assertEquals(HASH,FilesUtil.getHashOfFile(dst));
     }
-    @Test(groups = {"common"})
-    public void breakingLinkDownload() throws Exception {
 
 
-        File dir = TestUtil.initTestDir("./tmp");
+    public void resumeDownload() throws Exception {
 
-        URL url = new URL("http://localhost:" + TestingUpdateServer.getPort() + "/version11.xml");
-        downloader = new ExtendedDownloader(url, new File(dir,"file.txt"), false);
-        observer = new DownloadingObserver();
+
+        File dir = TestUtil.initTestDir("./test");
+        File dst = new File(dir, "test.zip");
+
+        URL url = new URL("http://localhost:" + TestingUpdateServer.getPort() + "/test.zip");
+        downloader = new ExtendedDownloader(url, dst, true);
+        DownloadingResumeObserver observer = new DownloadingResumeObserver();
         downloader.addObserver(observer);
         downloader.startDownload();
 
+        while (!observer.isPartDownloaded()){
+            Thread.sleep(5);
+        }
+        AssertJUnit.assertTrue("Загрузка здесь не должна быть завершена",!observer.isComplete());
+        downloader.resume();
+
+        while (!observer.isComplete()){
+            Thread.sleep(1000);
+        }
+
+        if(observer.isError()) AssertJUnit.fail(observer.getCause().map(e -> e.getMessage()).orElse(""));
+
+        TestUtil.hasFilesInDir(dir, Arrays.asList(dst.getName()),true);
+        AssertJUnit.assertEquals(HASH,FilesUtil.getHashOfFile(dst));
+
+    }
+
+
+    public void breakingLinkDownload() throws Exception {
+
+
+        File dir = TestUtil.initTestDir("./test");
+
+        URL url = new URL("http://localhost:" + TestingUpdateServer.getPort() + "/version11.xml");
+        downloader = new ExtendedDownloader(url, new File(dir,"file.txt"), false);
+        observer = new DownloadingCompleteObserver();
+        downloader.addObserver(observer);
+        downloader.startDownload();
 
         while (!observer.isComplete()){
             Thread.sleep(1000);
@@ -96,13 +133,15 @@ public class ExtendedDownloaderTest {
 
     }
 
-    private static  class DownloadingObserver implements Observer{
+
+    private abstract static  class DownloadingObserver implements Observer{
 
         public final Value<Boolean> value = new Value<>();
         public Optional<Exception> getCause(){return value.getErrorCause();}
         public boolean isCompleteNormal(){ return value.isComplete(); }
         public boolean isError(){return value.isError();}
         public boolean isComplete(){return value.isComplete();}
+
 
         @Override
         public void update(Observable o, Object arg) {
@@ -116,7 +155,21 @@ public class ExtendedDownloaderTest {
                  downloader =(ExtendedDownloader)o;
             }
 
-            ExtendedDownloader.DownloadingStatus status = downloader.getStatus();
+
+            stateLogic(downloader.getStatus(),downloader);
+        }
+
+        public abstract void stateLogic(ExtendedDownloader.DownloadingStatus status, ExtendedDownloader downloader);
+    }
+
+
+
+
+    private static  class DownloadingCompleteObserver  extends DownloadingObserver{
+
+
+        @Override
+        public void stateLogic(ExtendedDownloader.DownloadingStatus status, ExtendedDownloader downloader) {
             switch (status) {
                 case COMPLETE:
 
@@ -131,7 +184,6 @@ public class ExtendedDownloaderTest {
                     value.setError(new Exception("Error"));
                     break;
                 case DOWNLOADING:
-
                     break;
                 case CANCELLED:
                     break;
@@ -139,5 +191,39 @@ public class ExtendedDownloaderTest {
         }
     }
 
+    private static  class DownloadingResumeObserver extends DownloadingObserver{
+        public boolean isPartDownloaded(){return partDownloaded;}
+        private boolean partDownloaded=false;
+
+        @Override
+        public void stateLogic(ExtendedDownloader.DownloadingStatus status, ExtendedDownloader downloader) {
+            switch (status) {
+                case COMPLETE:
+
+                    value.setValue(true);
+                    break;
+                case BREAKINGLINK:
+
+                    value.setError(new Exception("BreakingLink"));
+                    break;
+                case ERROR:
+
+                    value.setError(new Exception("Error"));
+                    break;
+                case DOWNLOADING:
+                    if(!partDownloaded){
+
+                        if(downloader.getProgress()>0) {
+                            downloader.pause();
+                            partDownloaded=true;
+                            System.out.println("PAUSED");
+                        }
+                    }
+                    break;
+                case CANCELLED:
+                    break;
+            }
+        }
+    }
 
 }

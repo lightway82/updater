@@ -1,9 +1,14 @@
 package org.anantacreative.updater;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -195,6 +200,50 @@ public class FilesUtil {
     public static String extractRelativePathFrom(File commonPath, File forExtract){
         return commonPath.toURI().relativize(forExtract.toURI()).getPath();
 
+    }
+
+    /**
+     * Получение MD5 суммы файла ввиде HEX строки в верхнем регистре симоволов
+     * @param file
+     * @return
+     * @throws GetHashException
+     */
+    public  static String getHashOfFile(File file) throws GetHashException {
+        byte[] buffer = new byte[8192];
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+           throw new GetHashException(e);
+        }
+
+
+        try( DigestInputStream dis = new DigestInputStream(new FileInputStream(file), md)) {
+            while (dis.read(buffer) != -1);
+        } catch (FileNotFoundException e) {
+            throw new GetHashException(e);
+        } catch (IOException e) {
+            throw new GetHashException(e);
+        }catch (Exception e){
+            throw new GetHashException(e);
+        }
+
+        return toHexString(md.digest());
+    }
+
+    private static String toHexString(byte bytes[]){
+        StringBuffer hexString = new StringBuffer();
+        for (int i=0;i<bytes.length;i++) {
+            hexString.append(Integer.toHexString((bytes[i] >>> 4) & 0x0F));
+            hexString.append(Integer.toHexString(0x0F & bytes[i]));
+        }
+        return hexString.toString().toUpperCase();
+    }
+
+    public static class GetHashException extends Exception{
+        public GetHashException(Throwable cause) {
+            super(cause);
+        }
     }
 
 }

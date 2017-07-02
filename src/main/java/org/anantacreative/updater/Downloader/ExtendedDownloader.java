@@ -30,12 +30,13 @@ public class ExtendedDownloader  extends Observable implements Runnable
         COMPLETE,
         CANCELLED,
         ERROR,
-        BREAKINGLINK,
+        BREAKINGLINK
+
     }
 
   private URL url; // download URL
-  private int size; // size of download in bytes
-  private int downloaded; // number of bytes downloaded
+  private long sizeDownloadingFile; // size of download in bytes
+  private long downloaded; // number of bytes downloaded
   private DownloadingStatus status; // current status of download
   private File pathToFile;
   private boolean reloadFile;
@@ -51,12 +52,13 @@ public class ExtendedDownloader  extends Observable implements Runnable
      */
   public ExtendedDownloader(URL url, File dst, boolean reloadFile) {
     this.url = url;
-    size = -1;
+    sizeDownloadingFile = -1;
     downloaded = 0;
-    status = DOWNLOADING;
     this.pathToFile=dst;
     this.reloadFile =reloadFile;
   }
+
+
 
     /**
      * Путь файлу в который закачиваются данные
@@ -70,7 +72,7 @@ public class ExtendedDownloader  extends Observable implements Runnable
      * Стартует закачку
      */
   public void startDownload(){
-    download();
+    resume();
   }
 
 
@@ -82,14 +84,24 @@ public class ExtendedDownloader  extends Observable implements Runnable
     return url.toString();
   }
 
-  // Get this download's size.
-  public int getSize() {
-    return size;
+    /**
+     * Размер файла для загрузки
+     * @return
+     */
+  public long getDownloadingSize() {
+    return sizeDownloadingFile;
   }
 
-  // Get this download's progress.
+  private void setDownloadingSize(long size){
+      sizeDownloadingFile=size;
+  }
+
+    /**
+     * Прогресс закачки в процентах
+     * @return
+     */
   public float getProgress() {
-    return ((float) downloaded / size) * 100;
+    return ((float) downloaded / getDownloadingSize()) * 100;
   }
 
     /**
@@ -112,8 +124,6 @@ public class ExtendedDownloader  extends Observable implements Runnable
      * Возобновление закачки
      */
   public void resume() {
-    status = DOWNLOADING;
-    stateChanged();
     download();
   }
 
@@ -151,8 +161,12 @@ public class ExtendedDownloader  extends Observable implements Runnable
 
  
 
-
+//TODO в тестах проверять размер скачаного файла!
   public void run() {
+
+      status = DOWNLOADING;
+      stateChanged();
+
     RandomAccessFile file = null;
     InputStream stream = null;
     int downloadedPrev=0; //ранее загруженно
@@ -160,20 +174,17 @@ public class ExtendedDownloader  extends Observable implements Runnable
 
 
         HttpURLConnection connection = getConnection();
-      if(size==-1)
+        //мы могли стартануть поток заново, после pause() методом resume(), тогда getDownloadingSize() будет !=-1
+      if(getDownloadingSize()==-1)
       {
-      //заново создаем объект закачки
-            if(status == DOWNLOADING && reloadFile)downloaded=0;
-            if(status == DOWNLOADING)
-            {
-              //определим размер скаченного уже. Работает в случае если прерывали закачку не по паузе.
+              //определим размер скаченного уже. Работает в случае если прерывали закачку не по паузе. тк иначе мы точно знаем сколько скачано, тк все сохранилось в обхекте
 
               downloadedPrev  = (int)pathToFile.length();
               downloaded =downloadedPrev;
-            }
+
       }
 
-      if(reloadFile){
+      if(isNeedReloadFile()){
           downloaded=0;
           downloadedPrev=0;
       }
@@ -207,8 +218,8 @@ public class ExtendedDownloader  extends Observable implements Runnable
 
       /* Set the size for this download if it
          hasn't been already set. */
-      if (size == -1) {
-        size = contentLength+downloadedPrev;
+      if (getDownloadingSize() == -1) {
+        setDownloadingSize(contentLength+downloadedPrev);
         stateChanged();
       }
 
@@ -226,10 +237,10 @@ public class ExtendedDownloader  extends Observable implements Runnable
         /* Size buffer according to how much of the
            file is left to download. */
         byte buffer[];
-        if (size - downloaded > MAX_BUFFER_SIZE) {
+        if (getDownloadingSize() - downloaded > MAX_BUFFER_SIZE) {
           buffer = new byte[MAX_BUFFER_SIZE];
         } else {
-          if(size - downloaded !=0)buffer = new byte[size - downloaded];
+          if(getDownloadingSize() - downloaded !=0)buffer = new byte[(int)(getDownloadingSize() - downloaded)];
           else break;
         }
 
@@ -257,11 +268,11 @@ public class ExtendedDownloader  extends Observable implements Runnable
     }catch(FileNotFoundException e)
     {
         e.printStackTrace();
-       this.setErrorState();
+       setErrorState();
     }
     catch (Exception e) {
       setErrorState();
-     e.printStackTrace();//убрать по окончанию отладки
+     e.printStackTrace();
     
     } finally {
       // Close file.
@@ -288,11 +299,11 @@ public class ExtendedDownloader  extends Observable implements Runnable
     }
 
     /**
-     * Новая закачка
+     * Новая закачка, перезапись файла
      * @return
      */
-  private boolean isReloadFile(){
-      return size ==-1;
+  private boolean isNeedReloadFile(){
+      return reloadFile;
   }
 
   // Notify observers that this download's status has changed.

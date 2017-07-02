@@ -1,6 +1,8 @@
 package org.anantacreative.updater.tests;
 
 import org.anantacreative.updater.FilesUtil;
+import org.anantacreative.updater.ResourceUtil;
+import org.testng.AssertJUnit;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -195,6 +197,15 @@ public class FilesUtilTest {
         File f2 =new File("tmp/dst/file.txt");
         assertEquals(FilesUtil.extractRelativePathFrom(f1,f2),"dst/file.txt");
 
+    }
+
+    public void getHash() throws Exception {
+        String hash ="F5CBA2584027992BBFB9F8752867A076";
+        File dir = TestUtil.initTestDir("./test");
+        File file = ResourceUtil.saveResource(dir,"test.zip","/test.zip",true);
+
+        String hashOfFile = FilesUtil.getHashOfFile(file);
+        AssertJUnit.assertEquals(hash,hashOfFile);
     }
 
 
