@@ -1,5 +1,8 @@
 package org.anantacreative.updater.Downloader;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -76,11 +79,14 @@ class Downloader {
     }
 
     private static void download(Listener listener, Downloader downloader) {
-        CompletableFuture.runAsync(() -> downloader.run())
+        CompletableFuture.supplyAsync(() -> downloader.run())
                          .thenAccept(a->{
-                             if(downloader.isCancel()) listener.cancelled();
-                             else  if(downloader.isStop()) listener.stopped();
-                             else  listener.completed();
+                             if(a == COMPLETED_BREAKING_LINK) listener.breakingLink();
+                             else {
+                                 if(downloader.isCancel()) listener.cancelled();
+                                 else  if(downloader.isStop()) listener.stopped();
+                                 else  listener.completed();
+                             }
                              downloader.removeListener();
                          })
                          .exceptionally(e->{
@@ -90,92 +96,118 @@ class Downloader {
                          });
     }
 
-    private float getProgress() {
+    private float calculateProgress() {
         if (sizeDownloadingFile == -1) return 0;
         return ((float) downloaded / sizeDownloadingFile) * 100;
     }
 
     private void removeListener(){listener=null;}
 
-    private void run() {
+    private static boolean COMPLETED_NORMAL = true;
+    private static boolean COMPLETED_BREAKING_LINK = false;
+
+    private boolean run() {
         if(!createDirIfNotExists(pathToFile)) throw new RuntimeException("Dir "+pathToFile.getParent()+" not created!");
-        RandomAccessFile file = null;
-        InputStream stream = null;
-        int downloadedPrev = 0; //ранее загруженно
-        try {
 
-            HttpURLConnection connection = getConnection(url);
+        long downloadedPrev = defineDownloadedPrevSize(); //ранее загруженно
+        downloaded = downloadedPrev;
+        ConnectionTuple connection = prepareConnection();
 
-            if (isNeedReloadFile()) {
-                downloaded = 0;
-                downloadedPrev = 0;
-            }else {
-                downloadedPrev = (int) pathToFile.length();
-                downloaded = downloadedPrev;
-            }
+        if (isAlsoDownloaded(connection.getStatusCode(), isNeedReloadFile())) return COMPLETED_NORMAL;
+        else if (isConnectionSuccessfully(connection.getStatusCode())) return COMPLETED_BREAKING_LINK;
 
-            connection.setRequestProperty("Range", "bytes=" + downloaded + "-");
-            connection.connect();
+        if (connection.getContentLength() < 1) return COMPLETED_BREAKING_LINK;
+        sizeDownloadingFile = connection.getContentLength() + downloadedPrev;
+        listener.progress(calculateProgress());
+        downloadFile( connection, sizeDownloadingFile, pathToFile);
 
-            //если файл уже скачан, то вернется 416
-            if (connection.getResponseCode() == 416 && !reloadFile) return;
-            else if (connection.getResponseCode() / 100 != 2) {
-              listener.breakingLink();
-              return;
-            }
+        return COMPLETED_NORMAL;
+    }
 
-            int contentLength = connection.getContentLength();
-            if (contentLength < 1) {
-                listener.breakingLink();
-                return;
-            }
+    @Data
+    @AllArgsConstructor
+    private static class ConnectionTuple {
+       private HttpURLConnection connection;
+       private int statusCode;
+       private int contentLength;
+    }
 
-            sizeDownloadingFile = contentLength + downloadedPrev;
-            listener.progress(getProgress());
+    private void downloadFile(ConnectionTuple conn, long sizeDownloadingFile, File pathToFile){
+        try( RandomAccessFile file = prepareDstFile( pathToFile,  downloaded); InputStream stream  = prepareDownloadingStream(conn.getConnection())){
 
-            file = new RandomAccessFile(pathToFile, "rw");
-            if (downloaded == 0) file.setLength(0);
-            file.seek(downloaded);
-
-            stream = connection.getInputStream();
-            byte buffer[];
-
-
-            while (!stop && !cancel) {
-                if (sizeDownloadingFile - downloaded > MAX_BUFFER_SIZE) {
-                    buffer = new byte[MAX_BUFFER_SIZE];
-                } else {
-                    if (sizeDownloadingFile - downloaded != 0)
-                        buffer = new byte[(int) (sizeDownloadingFile - downloaded)];
-                    else break;
-                }
-                int read = stream.read(buffer);
-                if (read == -1) break;
-                file.write(buffer, 0, read);
-                downloaded += read;
-                listener.progress(getProgress());
-            }
-
+            downloadingCycle(file, stream, sizeDownloadingFile);
+            if(cancel) pathToFile.delete();
         } catch (FileNotFoundException e) {
-          throw  new RuntimeException(e);
-        } catch (Exception e) {
             throw  new RuntimeException(e);
-        } finally {
-            if (file != null) {
-                try {
-                    file.close();
-                } catch (Exception e) {
-                }
+        }catch (IOException e) {
+            throw  new RuntimeException(e);
+        }
+        catch (Exception e) {
+            throw  new RuntimeException(e);
+        }
+    }
+
+    private ConnectionTuple prepareConnection(){
+        HttpURLConnection connection;
+        int statusCode;
+        int contentLength;
+        try {
+            connection = getConnection(url);
+            connection.connect();
+            statusCode = connection.getResponseCode();
+            contentLength = connection.getContentLength();
+        } catch (IOException e) {
+            throw  new RuntimeException(e);
+        }
+        catch (Exception e) {
+            throw  new RuntimeException(e);
+        }
+
+        return new ConnectionTuple(connection, statusCode, contentLength);
+    }
+
+    private InputStream prepareDownloadingStream(HttpURLConnection connection) throws IOException {
+        return connection.getInputStream();
+    }
+
+    private RandomAccessFile prepareDstFile(File pathToFile, long downloaded) throws IOException {
+        RandomAccessFile file = new RandomAccessFile(pathToFile, "rw");
+        if (downloaded == 0) file.setLength(0);
+        file.seek(downloaded);
+        return file;
+    }
+    private boolean isConnectionSuccessfully(int  statusCode)  {
+        return statusCode / 100 != 2;
+    }
+
+    private boolean isAlsoDownloaded(int  statusCode, boolean reloadFile) {
+        return statusCode == 416 && !reloadFile;//если файл уже скачан, то вернется 416
+    }
+
+    private long defineDownloadedPrevSize(){
+        if (isNeedReloadFile()) {
+           return 0;
+        }else {
+           return pathToFile.length();
+        }
+    }
+
+    private void downloadingCycle(RandomAccessFile file, InputStream stream, long sizeDownloadingFile) throws IOException {
+        byte buffer[];
+
+        while (!stop && !cancel) {
+            if (sizeDownloadingFile - downloaded > MAX_BUFFER_SIZE) {
+                buffer = new byte[MAX_BUFFER_SIZE];
+            } else {
+                if (sizeDownloadingFile - downloaded != 0)
+                    buffer = new byte[(int) (sizeDownloadingFile - downloaded)];
+                else break;
             }
-            if (stream != null) {
-                try {
-                    stream.close();
-                    if(cancel){
-                        pathToFile.delete();
-                    }
-                } catch (Exception e) {
-                }
-            }
+            int read = stream.read(buffer);
+            if (read == -1) break;
+            file.write(buffer, 0, read);
+            downloaded += read;
+            listener.progress(calculateProgress());
         }
     }
 
@@ -183,6 +215,7 @@ class Downloader {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setConnectTimeout(connectionTimeOut);
         connection.setReadTimeout(readingTimeOut);
+        connection.setRequestProperty("Range", "bytes=" + downloaded + "-");
         return connection;
     }
 
