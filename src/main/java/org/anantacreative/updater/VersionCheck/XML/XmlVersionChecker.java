@@ -1,6 +1,6 @@
 package org.anantacreative.updater.VersionCheck.XML;
 
-import org.anantacreative.updater.Version;
+import org.anantacreative.updater.VersionCheck.Version;
 import org.anantacreative.updater.VersionCheck.AbstractVersionChecker;
 import org.anantacreative.updater.VersionCheck.DefineActualVersionError;
 import org.xml.sax.SAXException;

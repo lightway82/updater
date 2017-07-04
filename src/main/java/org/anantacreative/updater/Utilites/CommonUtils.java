@@ -1,4 +1,4 @@
-package org.anantacreative.updater;
+package org.anantacreative.updater.Utilites;
 
 
 public class CommonUtils

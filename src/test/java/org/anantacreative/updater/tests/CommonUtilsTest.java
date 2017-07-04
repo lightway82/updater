@@ -1,6 +1,6 @@
 package org.anantacreative.updater.tests;
 
-import org.anantacreative.updater.CommonUtils;
+import org.anantacreative.updater.Utilites.CommonUtils;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;

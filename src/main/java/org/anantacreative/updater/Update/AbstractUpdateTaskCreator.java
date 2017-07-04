@@ -1,7 +1,7 @@
 package org.anantacreative.updater.Update;
 
 import org.anantacreative.updater.Downloader.DownloadingTask;
-import org.anantacreative.updater.FilesUtil;
+import org.anantacreative.updater.Utilites.FilesUtil;
 
 import java.io.File;
 import java.net.URL;

@@ -1,6 +1,6 @@
 package org.anantacreative.updater.tests;
 
-import org.anantacreative.updater.Version;
+import org.anantacreative.updater.VersionCheck.Version;
 import org.anantacreative.updater.VersionCheck.DefineActualVersionError;
 import org.anantacreative.updater.VersionCheck.XML.XmlVersionChecker;
 import org.anantacreative.updater.tests.server.TestingUpdateServer;

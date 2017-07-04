@@ -1,7 +1,7 @@
 package org.anantacreative.updater.tests;
 
-import org.anantacreative.updater.FilesUtil;
-import org.anantacreative.updater.ResourceUtil;
+import org.anantacreative.updater.Utilites.FilesUtil;
+import org.anantacreative.updater.Utilites.ResourceUtil;
 import org.testng.AssertJUnit;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

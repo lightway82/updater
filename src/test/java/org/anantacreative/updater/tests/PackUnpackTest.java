@@ -3,7 +3,7 @@ package org.anantacreative.updater.tests;
 
 import org.anantacreative.updater.Pack.Packer;
 import org.anantacreative.updater.Pack.UnPacker;
-import org.anantacreative.updater.ResourceUtil;
+import org.anantacreative.updater.Utilites.ResourceUtil;
 import org.testng.annotations.Test;
 
 import java.io.File;

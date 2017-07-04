@@ -1,6 +1,6 @@
 package org.anantacreative.updater.tests.UpdateTests;
 
-import org.anantacreative.updater.FilesUtil;
+import org.anantacreative.updater.Utilites.FilesUtil;
 import org.anantacreative.updater.Update.AbstractUpdateTaskCreator;
 import org.anantacreative.updater.Update.UpdateException;
 import org.anantacreative.updater.Update.UpdateTask;

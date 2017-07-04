@@ -1,6 +1,6 @@
 package org.anantacreative.updater.tests;
 
-import org.anantacreative.updater.FilesUtil;
+import org.anantacreative.updater.Utilites.FilesUtil;
 
 import java.io.File;
 import java.io.FileWriter;

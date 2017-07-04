@@ -1,6 +1,6 @@
 package org.anantacreative.updater.tests.UpdateTests;
 
-import org.anantacreative.updater.ResourceUtil;
+import org.anantacreative.updater.Utilites.ResourceUtil;
 import org.anantacreative.updater.Update.UpdateTask;
 import org.anantacreative.updater.tests.PackUnpackTest;
 

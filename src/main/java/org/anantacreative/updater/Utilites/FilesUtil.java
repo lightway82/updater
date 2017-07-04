@@ -1,4 +1,4 @@
-package org.anantacreative.updater;
+package org.anantacreative.updater.Utilites;
 
 import java.io.File;
 import java.io.FileInputStream;

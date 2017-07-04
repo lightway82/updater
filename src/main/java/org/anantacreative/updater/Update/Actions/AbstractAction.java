@@ -1,6 +1,6 @@
 package org.anantacreative.updater.Update.Actions;
 
-import org.anantacreative.updater.FilesUtil;
+import org.anantacreative.updater.Utilites.FilesUtil;
 import org.anantacreative.updater.Update.ActionType;
 import org.anantacreative.updater.Update.UpdateAction;
 

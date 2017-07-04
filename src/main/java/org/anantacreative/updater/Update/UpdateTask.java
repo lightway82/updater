@@ -1,6 +1,6 @@
 package org.anantacreative.updater.Update;
 
-import org.anantacreative.updater.CommonUtils;
+import org.anantacreative.updater.Utilites.CommonUtils;
 
 import java.util.ArrayList;
 import java.util.Date;

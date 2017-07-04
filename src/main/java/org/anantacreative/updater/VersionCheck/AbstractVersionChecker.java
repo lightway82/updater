@@ -1,7 +1,5 @@
 package org.anantacreative.updater.VersionCheck;
 
-import org.anantacreative.updater.Version;
-
 import java.util.concurrent.CompletableFuture;
 
 /**

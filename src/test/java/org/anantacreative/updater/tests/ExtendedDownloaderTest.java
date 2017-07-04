@@ -1,8 +1,8 @@
 package org.anantacreative.updater.tests;
 
 import org.anantacreative.updater.Downloader.ExtendedDownloader;
-import org.anantacreative.updater.FilesUtil;
-import org.anantacreative.updater.ResourceUtil;
+import org.anantacreative.updater.Utilites.FilesUtil;
+import org.anantacreative.updater.Utilites.ResourceUtil;
 import org.anantacreative.updater.tests.server.TestingUpdateServer;
 import org.testng.AssertJUnit;
 import org.testng.annotations.BeforeClass;

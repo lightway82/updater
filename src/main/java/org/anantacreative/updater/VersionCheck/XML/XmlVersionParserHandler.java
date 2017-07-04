@@ -1,7 +1,7 @@
 package org.anantacreative.updater.VersionCheck.XML;
 
 import org.anantacreative.updater.FileTypeMissMatch;
-import org.anantacreative.updater.Version;
+import org.anantacreative.updater.VersionCheck.Version;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
