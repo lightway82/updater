@@ -2,6 +2,7 @@ package org.anantacreative.updater.Pack.Utils;
 
 import org.anantacreative.updater.Pack.Exceptions.PackException;
 import org.anantacreative.updater.Pack.Exceptions.UnPackException;
+import org.anantacreative.updater.Utilites.FilesUtil;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -76,47 +77,51 @@ public class ZipUtil {
     public static void unZip(File zipArch, File dstFolder) throws UnPackException {
         boolean res = true;
 
-        if (!zipArch.exists() || !zipArch.canRead()) {
+        CheckingAvailabilityArchive(zipArch);
+        CheckingAvailabilityDstDir(dstFolder);
 
-            throw new UnPackException("Archive not exist or can`t read");
-        }
+        try( ZipFile zip = new ZipFile(zipArch)){
 
-        if (!dstFolder.exists())
-            if (!dstFolder.mkdirs()) throw new UnPackException("Destination directory not exists or cant`t created");
-
-        ZipFile zip = null;
-        try {
-            zip = new ZipFile(zipArch);
             Enumeration entries = zip.entries();
 
             while (entries.hasMoreElements()) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
-
                 if (entry.isDirectory()) {
-                    //здесь нужно в имени поправить слэши, тк если архив создан на винде, вместо папки будет файл с слешами в названии
-                    new File(dstFolder, entry.getName()).mkdirs();
+                    processUnzipDir(dstFolder, entry);
                 } else {
-
-                    int i = entry.getName().lastIndexOf(File.separator);
-                    if (i != -1) {
-                        new File(dstFolder, entry.getName().substring(0, i)).mkdirs();
-                    }
-                    writeUnZip(zip.getInputStream(entry),
-                            new BufferedOutputStream(new FileOutputStream(new File(dstFolder, entry.getName()))));
+                    processUnzipFile(dstFolder, zip, entry);
                 }
             }
 
         } catch (Exception e) {
             throw new UnPackException(e);
-        } finally {
-
-            if (zip != null) try {
-                zip.close();
-            } catch (IOException e) {
-                throw new UnPackException(e);
-            }
         }
 
+
+    }
+
+    private static void processUnzipFile(File dstFolder, ZipFile zip, ZipEntry entry) throws IOException {
+        String entryName = FilesUtil.replaceAllBackSlashes(entry.getName());
+        int i = entryName.lastIndexOf("/");
+        if (i != -1) {
+            new File(dstFolder, entryName.substring(0, i)).mkdirs();
+        }
+        writeUnZip(zip.getInputStream(entry), new BufferedOutputStream(new FileOutputStream(new File(dstFolder, entryName)) ));
+    }
+
+    private static void processUnzipDir(File dstFolder, ZipEntry entry) {
+        new File(dstFolder, FilesUtil.replaceAllBackSlashes(entry.getName())).mkdirs();
+    }
+
+    private static void CheckingAvailabilityDstDir(File dstFolder) throws UnPackException {
+        if (!dstFolder.exists())
+            if (!dstFolder.mkdirs()) throw new UnPackException("Destination directory not exists or cant`t created");
+    }
+
+    private static void CheckingAvailabilityArchive(File zipArch) throws UnPackException {
+        if (!zipArch.exists() || !zipArch.canRead()) {
+            throw new UnPackException("Archive not exist or can`t read");
+        }
     }
 
     /**
@@ -158,8 +163,10 @@ public class ZipUtil {
             else entryName = fPath.substring(startIndex);
         }else entryName = fPath;
 
-        return entryName;
+        return FilesUtil.replaceAllBackSlashes(entryName);
     }
+
+
 
     private static void writeZip(File f, OutputStream out) throws IOException {
         try(InputStream in = new FileInputStream(f))
