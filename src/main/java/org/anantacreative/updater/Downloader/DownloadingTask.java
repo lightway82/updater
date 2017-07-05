@@ -9,8 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
-import static org.anantacreative.updater.Downloader.ExtendedDownloader.DownloadingState.*;
-
 /**
  * Задание на загрузку файлов
  */
@@ -77,42 +75,68 @@ public class DownloadingTask implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         if (o == null) {
-            try {
-                if (!next()) completer.complete();
-                else completer.nextFileStartDownloading(currentDownloadingItem);
-            } catch (Exception e) {
-                completer.error(e.getMessage());
-            }
+            initialHandling();
             return;
         }
 
         ExtendedDownloader.DownloadingState status = currentDownloader.getState();
         switch (status) {
             case COMPLETE:
-
-                try {
-                    completer.completeFile(currentDownloadingItem);
-                    if (!next()) completer.complete();
-                    else completer.nextFileStartDownloading(currentDownloadingItem);
-                } catch (Exception e) {
-                    completer.error(e.getMessage());
-                }
+                completeStateHandler();
                 break;
             case BREAKING_LINK:
+                breakingLinkStateHandler();
+                break;
             case ERROR:
-                //битая ссылка  или проблемы с доступом
-                if (status == BREAKING_LINK) {
-                    completer.error("BREAKING LINK");
-
-                } else completer.error("");
-                stop();
+                errorStateHandler();
                 break;
             case DOWNLOADING:
-                completer.currentFileProgress(currentDownloader.getProgress());
+                downloadingStateHandler();
                 break;
             case CANCELLED:
-                completer.canceled();
+                cancelledStateHandler();
                 break;
+        }
+    }
+
+    private void cancelledStateHandler() {
+        completer.canceled();
+    }
+
+    private void downloadingStateHandler() {
+        completer.currentFileProgress(currentDownloader.getProgress());
+    }
+
+    private void errorStateHandler() {
+        Throwable e = currentDownloader.getException();
+        completer.error(e==null?"":e.getMessage());
+        stop();
+    }
+
+    private void breakingLinkStateHandler() {
+        completer.error("BREAKING LINK");
+        stop();
+    }
+
+    private void completeStateHandler() {
+        try {
+            completer.completeFile(currentDownloadingItem);
+            if (!next()) completer.complete();
+            else completer.nextFileStartDownloading(currentDownloadingItem);
+        } catch (Exception e) {
+            completer.error(e.getMessage());
+        }
+    }
+
+    /**
+     * Вызывается в самом начале, чтобы запустить процесс Observable
+     */
+    private void initialHandling() {
+        try {
+            if (!next()) completer.complete();
+            else completer.nextFileStartDownloading(currentDownloadingItem);
+        } catch (Exception e) {
+            completer.error(e.getMessage());
         }
     }
 
