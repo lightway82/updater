@@ -17,6 +17,12 @@ public class XmlVersionParserHandler extends DefaultHandler {
         if (!qName.equals("Version")) throw new FileTypeMissMatch("File don`t has 'Version' tag.");
         else if (attrs.getLength() == 0) throw new FileTypeMissMatch("Attributes is absent");
 
+        version =  parseVersion(attrs);
+
+    }
+
+
+    private Version parseVersion(Attributes attrs) throws FileTypeMissMatch {
         String major = attrs.getValue("major");
         String minor = attrs.getValue("minor");
         String fix = attrs.getValue("fix");
@@ -30,8 +36,7 @@ public class XmlVersionParserHandler extends DefaultHandler {
         if (major.isEmpty() || minor.isEmpty() || fix.isEmpty())
             throw new FileTypeMissMatch("Attributes not correct");
 
-        version = new Version(Integer.parseInt(major), Integer.parseInt(minor), Integer.parseInt(fix));
-
+        return new Version(Integer.parseInt(major), Integer.parseInt(minor), Integer.parseInt(fix));
 
     }
 
