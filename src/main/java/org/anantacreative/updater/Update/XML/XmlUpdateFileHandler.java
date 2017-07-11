@@ -1,6 +1,6 @@
 package org.anantacreative.updater.Update.XML;
 
-import org.anantacreative.updater.Update.Actions.ActionBuilder;
+import org.anantacreative.updater.Update.Actions.ActionFactory;
 import org.anantacreative.updater.Update.UpdateActionFileItem;
 import org.anantacreative.updater.Update.UpdateTask;
 import org.anantacreative.updater.Update.UpdateTaskItem;
@@ -80,8 +80,8 @@ public class XmlUpdateFileHandler extends DefaultHandler {
 
         currentUpdateTaskItem = new UpdateTaskItem();
         try {
-            currentUpdateTaskItem.setAction(ActionBuilder.build(type));
-        } catch (ActionBuilder.UnknownActionError e) {
+            currentUpdateTaskItem.setAction(ActionFactory.build(type));
+        } catch (ActionFactory.UnknownActionError e) {
             throw new SAXException("Action type='"+type+"'",e);
         }
     }

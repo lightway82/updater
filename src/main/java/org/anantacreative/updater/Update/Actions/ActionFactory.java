@@ -7,7 +7,7 @@ import java.lang.reflect.Constructor;
 /**
  *
  */
-public class ActionBuilder {
+public class ActionFactory {
 
     public static UpdateAction build(String type) throws UnknownActionError {
         return build(ActionType.getType(type));
