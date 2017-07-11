@@ -1,7 +1,8 @@
 package org.anantacreative.updater.Update.Actions;
 
-import org.anantacreative.updater.Update.ActionType;
 import org.anantacreative.updater.Update.UpdateAction;
+
+import java.lang.reflect.Constructor;
 
 /**
  *
@@ -15,44 +16,13 @@ public class ActionBuilder {
     public static UpdateAction build(ActionType type) throws UnknownActionError {
         if (type == ActionType.UNKNOWN) throw new UnknownActionError();
         UpdateAction action;
-        switch (type) {
-            case COPY_DIRS:
-                action = new ActionCopyDirs(ActionType.COPY_DIRS);
-                break;
-            case COPY_FILES:
-                action = new ActionCopyFiles(ActionType.COPY_FILES);
-                break;
-            case DELETE_DIRS:
-                action = new ActionDeleteDirs(ActionType.DELETE_DIRS);
-                break;
-            case DELETE_FILES:
-                action = new ActionDeleteFiles(ActionType.DELETE_FILES);
-                break;
-            case MOVE:
-                action = new ActionMove(ActionType.MOVE);
-                break;
-            case PACK_FILES:
-                action = new ActionPackFiles(ActionType.PACK_FILES);
-                break;
-            case PACK_DIRS:
-                action = new ActionPackDirs(ActionType.PACK_DIRS);
-                break;
-            case RENAME:
-                action = new ActionRename(ActionType.RENAME);
-                break;
-            case RUN:
-                action = new ActionRun(ActionType.RUN);
-                break;
 
-            case UNPACK:
-                action = new ActionUnpack(ActionType.UNPACK);
-                break;
-            case DOWNLOAD:
-                action = new ActionDownload(ActionType.DOWNLOAD);
-                break;
-            default:
-                throw new UnknownActionError();
+        try {
+            Constructor<? extends UpdateAction> constructor = type.getUpdateActionClass().getDeclaredConstructor(ActionType.class);
+            action =  constructor.newInstance(type);
 
+        } catch (Exception e) {
+        throw new RuntimeException(e);
         }
         return action;
     }

@@ -1,6 +1,5 @@
 package org.anantacreative.updater.Update.Actions;
 
-import org.anantacreative.updater.Update.ActionType;
 import org.anantacreative.updater.Update.UpdateActionException;
 import org.anantacreative.updater.Update.UpdateActionFileItem;
 

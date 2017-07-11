@@ -1,5 +1,7 @@
 package org.anantacreative.updater.Update;
 
+import org.anantacreative.updater.Update.Actions.ActionType;
+
 /**
  * Ошибка операции обновления
  */

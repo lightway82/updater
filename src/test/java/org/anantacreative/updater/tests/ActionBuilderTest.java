@@ -1,7 +1,7 @@
 package org.anantacreative.updater.tests;
 
 import org.anantacreative.updater.Update.Actions.ActionBuilder;
-import org.anantacreative.updater.Update.ActionType;
+import org.anantacreative.updater.Update.Actions.ActionType;
 import org.anantacreative.updater.Update.Actions.*;
 import org.anantacreative.updater.Update.UpdateAction;
 import org.testng.annotations.Test;

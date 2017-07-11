@@ -6,7 +6,7 @@
 
     <groupId>org.anantacreative</groupId>
     <artifactId>updater</artifactId>
-    <version>0.15.2</version>
+    <version>0.15.3</version>
     <packaging>jar</packaging>
 
     <name>Updater</name>
