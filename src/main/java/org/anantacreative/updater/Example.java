@@ -17,13 +17,12 @@ import java.net.URL;
  */
 public class Example {
 
-
     public static void main(String[] args){
 
         Version curVersion=new Version(1,0,0);
         XmlUpdateTaskCreator taskCreator;
         try {
-            XmlVersionChecker versionChecker=new XmlVersionChecker(curVersion,new URL("http://www.biomedis.ru/doc/b_mair/updater/version.xml"));
+            XmlVersionChecker versionChecker=new XmlVersionChecker(curVersion,new URL("http://my_url/version.xml"));
             if(versionChecker.checkNeedUpdate())   {
                 System.out.println("Требуется обновление");
                 System.out.println("Актуальная версия = "+ versionChecker.getActualVersion());
@@ -41,17 +40,14 @@ public class Example {
                                     ut.update(new UpdateTask.UpdateListener() {
                                         @Override
                                         public void progress(int persent) {
-
                                         }
 
                                         @Override
                                         public void completed() {
-
                                         }
 
                                         @Override
                                         public void error(UpdateException e) {
-
                                         }
                                     });
 
@@ -84,7 +80,7 @@ public class Example {
                                 progressPercentage((int)progress,100);
                             }
                         },
-                        new URL("http://www.biomedis.ru/doc/b_mair/updater/update.xml"));
+                        new URL("http://my_url/update.xml"));
 
                 taskCreator.createTask(false);
             }
