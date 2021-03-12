@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  *Осуществляет закачку файла.
  */
-class Downloader {
+public class Downloader {
 
     private long sizeDownloadingFile=-1; // size of download in bytes
     private long downloaded = 0; // number of bytes downloaded
