@@ -17,7 +17,7 @@
         <java-version>1.8</java-version>
         <programmVersionMajor>0</programmVersionMajor>
         <programmVersionMinor>10</programmVersionMinor>
-        <log4j.version>2.5</log4j.version>
+        <log4j.version>2.14.1</log4j.version>
         <github.global.server>github</github.global.server>
     </properties>
     <distributionManagement>
